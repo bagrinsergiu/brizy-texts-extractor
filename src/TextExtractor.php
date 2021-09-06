@@ -4,6 +4,11 @@ namespace BrizyTextsExtractor;
 
 class TextExtractor implements TextExtractorInterface
 {
+    /**
+     * @param $content
+     *
+     * @return array<ExtractedContent>
+     */
     public function extractFromContent($content): array
     {
         $result = [];
@@ -42,9 +47,10 @@ class TextExtractor implements TextExtractorInterface
             }
         }
 
-        $result = array_merge($result,$this->extractImages($dom));
+        $result = array_merge($result, $this->extractImages($dom));
 
-        return $result;
+        // remove duplicates
+        return array_unique($result);
     }
 
     private function extractImages($dom)
@@ -57,7 +63,6 @@ class TextExtractor implements TextExtractorInterface
              * @var \DOMElement $pictureNode ;
              */
             // search for sources
-
             foreach ($pictureNode->getElementsByTagName('source') as $sourceTag) {
                 $srcSet = trim($sourceTag->getAttribute('srcset'));
                 foreach (explode(',', $srcSet) as $imageSize) {
@@ -73,8 +78,8 @@ class TextExtractor implements TextExtractorInterface
                 $srcSet = trim($imgTag->getAttribute('srcset'));
 
                 foreach (explode(',', $srcSet) as $imageSize) {
-                    $explode = explode(' ', trim($imageSize));
-                    $src     = $explode[0];
+                    $explode  = explode(' ', trim($imageSize));
+                    $src      = $explode[0];
                     $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_IMAGE);
                 }
 
@@ -110,8 +115,6 @@ class TextExtractor implements TextExtractorInterface
                 $result[] = ExtractedContent::instance($alt, ExtractedContent::TYPE_IMAGE_ALT);
             }
         }
-
-
 
         return $result;
     }

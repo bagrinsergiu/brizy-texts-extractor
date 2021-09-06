@@ -13,7 +13,7 @@ class TextExtractorTest extends TestCase
         $extractor = new TextExtractor();
         $result = $extractor->extractFromContent(file_get_contents('./tests/data/pages/case1.html'));
 
-        $this->assertCount(22,$result,'It should reutrn the corrent count of texts');
+        $this->assertCount(22,$result,'It should return the correct count of texts');
 
         $this->assertTrue(in_array('title',$result),'It should container "title"');
         $this->assertTrue(in_array("Type the entire URL of your website in the text box on the left. ... The website translations you get with Google Translate aren't accurate and the service",$result),'It should container "the long text"');
@@ -39,5 +39,4 @@ class TextExtractorTest extends TestCase
         $this->assertTrue(in_array('brizy-wp-pricing-13.jpg',$result),'It should contain "brizy-wp-pricing-13.jpg"');
         $this->assertTrue(in_array('brizy.jpg',$result),'It should contain "brizy.jpg"');
     }
-
 }

@@ -19,6 +19,8 @@ class ExtractedContent
      */
     private $type;
 
+    private $translatedContent;
+
     public function __toString()
     {
         return $this->content;
@@ -69,6 +71,26 @@ class ExtractedContent
     public function setType($type)
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTranslatedContent()
+    {
+        return $this->translatedContent;
+    }
+
+    /**
+     * @param mixed $translatedContent
+     *
+     * @return ExtractedContent
+     */
+    public function setTranslatedContent($translatedContent): ExtractedContent
+    {
+        $this->translatedContent = $translatedContent;
 
         return $this;
     }
