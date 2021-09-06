@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cd $(dirname $0)/../
+
+PARAMS="${@:---env=test}"
+
+docker build -t brizy-text-extractor $PWD/dev/
