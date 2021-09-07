@@ -69,7 +69,7 @@ class TextExtractor implements TextExtractorInterface
                     $explode = explode(' ', trim($imageSize));
                     $src     = $explode[0];
 
-                    $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_IMAGE);
+                    $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
                 }
             }
 
@@ -80,14 +80,14 @@ class TextExtractor implements TextExtractorInterface
                 foreach (explode(',', $srcSet) as $imageSize) {
                     $explode  = explode(' ', trim($imageSize));
                     $src      = $explode[0];
-                    $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_IMAGE);
+                    $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
                 }
 
                 $src = trim($imgTag->getAttribute('src'));
                 $alt = trim($imgTag->getAttribute('alt'));
 
                 if ($src) {
-                    $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_IMAGE);
+                    $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
                 }
 
                 if ($alt) {
@@ -108,7 +108,7 @@ class TextExtractor implements TextExtractorInterface
             $alt = trim($node->getAttribute('alt'));
 
             if ($src) {
-                $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_IMAGE);
+                $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
             }
 
             if ($alt) {

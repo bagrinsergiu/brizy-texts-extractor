@@ -4,10 +4,9 @@ namespace BrizyTextsExtractor;
 
 class ExtractedContent
 {
-    const TYPE_UNKNOWN = 0;
-    const TYPE_TEXT = 1;
-    const TYPE_IMAGE = 2;
-    const TYPE_IMAGE_ALT = 3;
+    const TYPE_TEXT = 'text';
+    const TYPE_MEDIA = 'media';
+    const TYPE_IMAGE_ALT = 'alt_text';
 
     /**
      * @var string
@@ -15,7 +14,7 @@ class ExtractedContent
     private $content;
 
     /**
-     * @var int
+     * @var string
      */
     private $type;
 
@@ -64,7 +63,7 @@ class ExtractedContent
     }
 
     /**
-     * @param int $type
+     * @param string $type
      *
      * @return ExtractedContent
      */
