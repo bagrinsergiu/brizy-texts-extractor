@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BrizyTextsExtractor;
 
 class TextReplacer implements TextReplacerInterface
@@ -19,12 +21,11 @@ class TextReplacer implements TextReplacerInterface
     private function returnStrReplaceArguments(array $extractedContents)
     {
         $replace = [];
-        $with    = [];
+        $with = [];
         foreach ($extractedContents as $extractedContent) {
-
             if ($extractedContent->getTranslatedContent()) {
                 $replace[] = $extractedContent->getContent();
-                $with[]    = $extractedContent->getTranslatedContent();
+                $with[] = $extractedContent->getTranslatedContent();
             }
         }
 
