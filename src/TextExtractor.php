@@ -1,9 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BrizyTextsExtractor;
 
 class TextExtractor implements TextExtractorInterface
 {
+    public const EXCLUDED_TAGS = ['style', 'script'];
+
     /**
      * @param $content
      *
@@ -28,7 +32,7 @@ class TextExtractor implements TextExtractorInterface
     {
         $content = file_get_contents($url);
 
-        if ( ! is_string($content)) {
+        if (!is_string($content)) {
             return [];
         }
 
@@ -38,10 +42,16 @@ class TextExtractor implements TextExtractorInterface
     private function extractTexts($dom)
     {
         $result = [];
-        $xpath  = new \DOMXPath($dom);
+        $xpath = new \DOMXPath($dom);
 
         // extract all texts
         foreach ($xpath->query('//text()') as $node) {
+            $parent = $node->parentNode;
+
+            if (in_array($parent->tagName, self::EXCLUDED_TAGS)) {
+                continue;
+            }
+
             if ($content = trim($node->nodeValue)) {
                 $result[] = ExtractedContent::instance($content, ExtractedContent::TYPE_TEXT);
             }
@@ -67,7 +77,7 @@ class TextExtractor implements TextExtractorInterface
                 $srcSet = trim($sourceTag->getAttribute('srcset'));
                 foreach (explode(',', $srcSet) as $imageSize) {
                     $explode = explode(' ', trim($imageSize));
-                    $src     = $explode[0];
+                    $src = $explode[0];
 
                     $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
                 }
@@ -78,8 +88,8 @@ class TextExtractor implements TextExtractorInterface
                 $srcSet = trim($imgTag->getAttribute('srcset'));
 
                 foreach (explode(',', $srcSet) as $imageSize) {
-                    $explode  = explode(' ', trim($imageSize));
-                    $src      = $explode[0];
+                    $explode = explode(' ', trim($imageSize));
+                    $src = $explode[0];
                     $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
                 }
 
@@ -95,7 +105,6 @@ class TextExtractor implements TextExtractorInterface
                 }
             }
         }
-
 
         // remove all picture nodes for to avoid future img search
         foreach ($dom->getElementsByTagName('picture') as $pictureNode) {
