@@ -20,11 +20,5 @@
     "friendsofphp/php-cs-fixer": "^2.19",
     "phpspec/prophecy-phpunit": "^2.0",
     "phpunit/phpunit": "^9.5"
-  },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/alecszaharia/pre-commit-php-cs.git"
-    }
-  ]
+  }
 }
