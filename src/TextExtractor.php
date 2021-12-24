@@ -101,7 +101,7 @@ class TextExtractor implements TextExtractorInterface
                 }
 
                 if ($alt) {
-                    $result[] = ExtractedContent::instance($alt, ExtractedContent::TYPE_IMAGE_ALT);
+                    $result[] = ExtractedContent::instance($alt, ExtractedContent::TYPE_TEXT);
                 }
             }
         }
@@ -121,7 +121,7 @@ class TextExtractor implements TextExtractorInterface
             }
 
             if ($alt) {
-                $result[] = ExtractedContent::instance($alt, ExtractedContent::TYPE_IMAGE_ALT);
+                $result[] = ExtractedContent::instance($alt, ExtractedContent::TYPE_TEXT);
             }
         }
 

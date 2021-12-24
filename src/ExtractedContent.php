@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BrizyTextsExtractor;
 
 class ExtractedContent
 {
     const TYPE_TEXT = 'text';
     const TYPE_MEDIA = 'media';
-    const TYPE_IMAGE_ALT = 'alt_text';
 
     /**
      * @var string
@@ -84,8 +85,6 @@ class ExtractedContent
 
     /**
      * @param mixed $translatedContent
-     *
-     * @return ExtractedContent
      */
     public function setTranslatedContent($translatedContent): ExtractedContent
     {
