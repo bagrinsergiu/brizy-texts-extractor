@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace BrizyTextsExtractor;
 
 class ExtractedContent
@@ -85,6 +83,8 @@ class ExtractedContent
 
     /**
      * @param mixed $translatedContent
+     *
+     * @return ExtractedContent
      */
     public function setTranslatedContent($translatedContent): ExtractedContent
     {

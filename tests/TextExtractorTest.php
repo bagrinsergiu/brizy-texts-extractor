@@ -13,7 +13,7 @@ class TextExtractorTest extends TestCase
         $extractor = new TextExtractor();
         $result    = $extractor->extractFromContent(file_get_contents('./tests/data/pages/case1.html'));
 
-        $this->assertCount(22, $result, 'It should return the correct count of texts');
+        $this->assertCount(25, $result, 'It should return the correct count of texts');
 
         $this->assertTrue(in_array('title', $result), 'It should container "title"');
         $this->assertTrue(
@@ -23,6 +23,8 @@ class TextExtractorTest extends TestCase
             ),
             'It should container "the long text"'
         );
+        $this->assertTrue(in_array('src', $result), 'It should container "src"');
+        $this->assertTrue(in_array('src="image1.jpg"', $result), 'It should container src="image1.jpg"');
         $this->assertTrue(in_array('paragraph1', $result), 'It should container "paragraph1"');
         $this->assertTrue(in_array('paragraph2', $result), 'It should container "paragraph2"');
         $this->assertTrue(in_array('paragraph3', $result), 'It should container "paragraph3"');

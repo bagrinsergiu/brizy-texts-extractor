@@ -20,8 +20,12 @@ RUN apt-get update && apt-get install -y \
 RUN pecl install mongodb && docker-php-ext-enable mongodb
 RUN pecl install xdebug-3.0.2 && docker-php-ext-enable xdebug
 
+ENV APP_ENV: dev
+ENV PHP_IDE_CONFIG: serverName=_
+ENV XDEBUG_CONFIG: mode=debug client_host=host.docker.internal client_port=9003 start_with_request=trigger
+
 
 COPY conf.d/php.ini "$PHP_INI_DIR/php.ini"
 COPY conf.d/xdebug.ini "/usr/local/etc/php/conf.d/xdebug.ini"
 
-WORKDIR /usr/src/projects
+WORKDIR /opt/project
