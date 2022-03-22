@@ -51,7 +51,7 @@ class TextReplacer implements TextReplacerInterface
 
             if ($content = trim($node->nodeValue)) {
                 $md5NodeValue = md5($content);
-                if (isset($translatedTexts[$md5NodeValue])) {
+                if (isset($translatedTexts[$md5NodeValue]) && $translatedTexts[$md5NodeValue]->getTranslatedContent()) {
                     $node->nodeValue = str_replace($translatedTexts[$md5NodeValue]->getContent(),$translatedTexts[$md5NodeValue]->getTranslatedContent(), $node->nodeValue);
                 }
             }
@@ -67,7 +67,7 @@ class TextReplacer implements TextReplacerInterface
 
             if ($srcSet) {
                 foreach ($translatedMedias as $media) {
-                    if (strpos($srcSet, $media->getContent()) !== false) {
+                    if (strpos($srcSet, $media->getContent()) !== false && $media->getTranslatedContent()) {
                         $srcSet = str_replace(
                             $media->getContent(),
                             $media->getTranslatedContent(),
@@ -90,7 +90,7 @@ class TextReplacer implements TextReplacerInterface
 
             if ($srcSet) {
                 foreach ($translatedMedias as $media) {
-                    if (strpos($srcSet, $media->getContent()) !== false) {
+                    if (strpos($srcSet, $media->getContent()) !== false && $media->getTranslatedContent()) {
                         $srcSet = str_replace(
                             $media->getContent(),
                             $media->getTranslatedContent(),
@@ -101,7 +101,7 @@ class TextReplacer implements TextReplacerInterface
                 }
             }
 
-            if ($src && isset($translatedMedias[$md5Src])) {
+            if ($src && isset($translatedMedias[$md5Src]) && $translatedMedias[$md5Src]->getTranslatedContent()) {
                 $node->setAttribute(
                     'src',
                     str_replace(
@@ -112,7 +112,7 @@ class TextReplacer implements TextReplacerInterface
                 );
             }
 
-            if ($alt && isset($translatedTexts[$md5Alt])) {
+            if ($alt && isset($translatedTexts[$md5Alt]) && $translatedTexts[$md5Alt]->getTranslatedContent()) {
                 $node->setAttribute('alt', str_replace($translatedTexts[$md5Alt]->getContent(),$translatedTexts[$md5Alt]->getTranslatedContent(), $alt));
             }
         }
