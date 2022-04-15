@@ -52,10 +52,33 @@ class TextReplacer implements TextReplacerInterface
             if ($content = trim($node->nodeValue)) {
                 $md5NodeValue = md5($content);
                 if (isset($translatedTexts[$md5NodeValue]) && $translatedTexts[$md5NodeValue]->getTranslatedContent()) {
-                    $node->nodeValue = str_replace($translatedTexts[$md5NodeValue]->getContent(),$translatedTexts[$md5NodeValue]->getTranslatedContent(), $node->nodeValue);
+                    $node->nodeValue = str_replace(
+                        $translatedTexts[$md5NodeValue]->getContent(),
+                        $translatedTexts[$md5NodeValue]->getTranslatedContent(),
+                        $node->nodeValue
+                    );
                 }
             }
 
+        }
+
+        foreach ($xpath->query('//*[@placeholder]') as $node) {
+            /**
+             * @var \DOMNode $node ;
+             */
+
+            $attr = $node->attributes->getNamedItem('placeholder');
+            if ($attr) {
+                $content      = $attr->value;
+                $md5NodeValue = md5($content);
+                if (isset($translatedTexts[$md5NodeValue]) && $translatedTexts[$md5NodeValue]->getTranslatedContent()) {
+                    $node->attributes->getNamedItem('placeholder')->value = str_replace(
+                        $translatedTexts[$md5NodeValue]->getContent(),
+                        $translatedTexts[$md5NodeValue]->getTranslatedContent(),
+                        $content
+                    );
+                }
+            }
         }
 
         /**
@@ -113,7 +136,14 @@ class TextReplacer implements TextReplacerInterface
             }
 
             if ($alt && isset($translatedTexts[$md5Alt]) && $translatedTexts[$md5Alt]->getTranslatedContent()) {
-                $node->setAttribute('alt', str_replace($translatedTexts[$md5Alt]->getContent(),$translatedTexts[$md5Alt]->getTranslatedContent(), $alt));
+                $node->setAttribute(
+                    'alt',
+                    str_replace(
+                        $translatedTexts[$md5Alt]->getContent(),
+                        $translatedTexts[$md5Alt]->getTranslatedContent(),
+                        $alt
+                    )
+                );
             }
         }
 

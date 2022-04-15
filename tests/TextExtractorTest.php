@@ -13,7 +13,7 @@ class TextExtractorTest extends TestCase
         $extractor = new TextExtractor();
         $result    = $extractor->extractFromContent(file_get_contents('./tests/data/pages/case1.html'));
 
-        $this->assertCount(25, $result, 'It should return the correct count of texts');
+        $this->assertCount(26, $result, 'It should return the correct count of texts');
 
         $this->assertTrue(in_array('title', $result), 'It should container "title"');
         $this->assertTrue(
@@ -39,6 +39,7 @@ class TextExtractorTest extends TestCase
         $this->assertTrue(in_array('image3.jpg', $result), 'It should container "image3.jpg"');
         $this->assertTrue(in_array('alt_for_image.jpg', $result), 'It should container "alt_for_image.jpg"');
         $this->assertTrue(in_array('next-alt', $result), 'It should container "next-alt"');
+        $this->assertTrue(in_array('placeholder', $result), 'It should container "placeholder"');
 
         $this->assertTrue(in_array('brizy-wp-pricing-1.jpg', $result), 'It should contain "brizy-wp-pricing-1.jpg"');
         $this->assertTrue(in_array('brizy-wp-pricing-2.jpg', $result), 'It should contain "brizy-wp-pricing-2.jpg"');

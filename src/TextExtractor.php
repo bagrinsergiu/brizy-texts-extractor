@@ -47,6 +47,7 @@ class TextExtractor implements TextExtractorInterface
         $xpath  = new \DOMXPath($dom);
 
         // extract all texts
+
         foreach ($xpath->query('//text()') as $node) {
             $parent = $node->parentNode;
 
@@ -56,6 +57,18 @@ class TextExtractor implements TextExtractorInterface
 
             if ($content = trim($node->nodeValue)) {
                 $result[] = ExtractedContent::instance($content, ExtractedContent::TYPE_TEXT);
+            }
+        }
+
+        foreach ($xpath->query('//*[@placeholder]') as $node) {
+            /**
+             * @var \DOMNode $node;
+             * @var \DOMNamedNodeMap $t;
+             */
+
+            $attr =  $node->attributes->getNamedItem('placeholder');
+            if($attr) {
+                $result[] = ExtractedContent::instance(trim($attr->value), ExtractedContent::TYPE_TEXT);
             }
         }
 
