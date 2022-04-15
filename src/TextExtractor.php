@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace BrizyTextsExtractor;
 
+use BrizyPlaceholders\ContentPlaceholder;
+use BrizyPlaceholders\Extractor;
+use BrizyPlaceholders\Registry;
+
 class TextExtractor implements TextExtractorInterface
 {
     public const EXCLUDED_TAGS = ['style', 'script'];
+    private const DOM_OPTIONS = LIBXML_BIGLINES | LIBXML_NOBLANKS | LIBXML_NONET | LIBXML_NOERROR | LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_PARSEHUGE;
 
     /**
      * @param $content
@@ -15,11 +20,10 @@ class TextExtractor implements TextExtractorInterface
      */
     public function extractFromContent($content): array
     {
+        $content = $this->replaceContentPlaceholders($content);
+
         $dom = new \DOMDocument();
-        $dom->loadHTML(
-            $content,
-            LIBXML_BIGLINES | LIBXML_NOBLANKS | LIBXML_NONET | LIBXML_NOERROR | LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_PARSEHUGE
-        );
+        $dom->loadHTML($content, self::DOM_OPTIONS);
 
         $result = $this->extractTexts($dom);
 
@@ -37,7 +41,7 @@ class TextExtractor implements TextExtractorInterface
         return $this->extractFromContent($content);
     }
 
-    private function extractTexts($dom,$options=[])
+    private function extractTexts($dom, $options = [])
     {
         $defaultOptions = ['excludeTags' => self::EXCLUDED_TAGS];
 
@@ -47,7 +51,6 @@ class TextExtractor implements TextExtractorInterface
         $xpath  = new \DOMXPath($dom);
 
         // extract all texts
-
         foreach ($xpath->query('//text()') as $node) {
             $parent = $node->parentNode;
 
@@ -60,18 +63,7 @@ class TextExtractor implements TextExtractorInterface
             }
         }
 
-        foreach ($xpath->query('//*[@placeholder]') as $node) {
-            /**
-             * @var \DOMNode $node;
-             * @var \DOMNamedNodeMap $t;
-             */
-
-            $attr =  $node->attributes->getNamedItem('placeholder');
-            if($attr) {
-                $result[] = ExtractedContent::instance(trim($attr->value), ExtractedContent::TYPE_TEXT);
-            }
-        }
-
+        $result = array_merge($result, $this->extractAttributeTexts($dom, 'placeholder'));
         $result = array_merge($result, $this->extractImages($dom));
 
         // remove duplicates
@@ -124,5 +116,38 @@ class TextExtractor implements TextExtractorInterface
         }
 
         return $result;
+    }
+
+    private function extractAttributeTexts($dom, $attribute)
+    {
+        $result = [];
+        $xpath  = new \DOMXPath($dom);
+        foreach ($xpath->query('//*[@'.$attribute.']') as $node) {
+            /**
+             * @var \DOMNode $node ;
+             * @var \DOMNamedNodeMap $t ;
+             */
+
+            $attr = $node->attributes->getNamedItem($attribute);
+            if ($attr) {
+                $result[] = ExtractedContent::instance(trim($attr->value), ExtractedContent::TYPE_TEXT);
+            }
+        }
+
+        return $result;
+
+    }
+
+    private function replaceContentPlaceholders($content)
+    {
+        $extractor = new Extractor(new Registry());
+        list($contentPlaceholders, $returnedContent) = $extractor->extractIgnoringRegistry(
+            $content,
+            function (ContentPlaceholder $p) {
+                return  "<div>{$this->replaceContentPlaceholders($p->getContent())}</div>";
+            }
+        );
+
+        return $returnedContent;
     }
 }

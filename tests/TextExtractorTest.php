@@ -11,11 +11,16 @@ class TextExtractorTest extends TestCase
     public function testExtractFromContentCase1()
     {
         $extractor = new TextExtractor();
-        $result    = $extractor->extractFromContent(file_get_contents('./tests/data/pages/case1.html'));
+        $result    = $extractor->extractFromContent(file_get_contents('./data/pages/case1.html'));
 
-        $this->assertCount(26, $result, 'It should return the correct count of texts');
+        $this->assertCount(30, $result, 'It should return the correct count of texts');
 
         $this->assertTrue(in_array('title', $result), 'It should container "title"');
+        $this->assertTrue(in_array('text', $result), 'It should container "text"');
+        $this->assertTrue(in_array('text2', $result), 'It should container "text2"');
+        $this->assertTrue(in_array('placeholder-in-placeholder', $result), 'It should container "placeholder-in-placeholder"');
+        $this->assertTrue(in_array('placeholder text1', $result), 'It should container "placeholder text1"');
+        $this->assertTrue(in_array('placeholder', $result), 'It should container "placeholder text"');
         $this->assertTrue(
             in_array(
                 "Type the entire URL of your website in the text box on the left. ... The website translations you get with Google Translate aren't accurate and the service",
