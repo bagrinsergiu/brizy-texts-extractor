@@ -49,8 +49,8 @@ class TextReplacer implements TextReplacerInterface
                 continue;
             }
 
-            if ($content = trim($node->nodeValue)) {
-                $md5NodeValue = md5($content);
+            if ($string = trim($node->nodeValue)) {
+                $md5NodeValue = md5($string);
                 if (isset($translatedTexts[$md5NodeValue]) && $translatedTexts[$md5NodeValue]->getTranslatedContent()) {
                     $node->nodeValue = str_replace(
                         $translatedTexts[$md5NodeValue]->getContent(),

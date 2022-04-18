@@ -11,7 +11,7 @@ class TextExtractorTest extends TestCase
     public function testExtractFromContentCase1()
     {
         $extractor = new TextExtractor();
-        $result    = $extractor->extractFromContent(file_get_contents('./data/pages/case1.html'));
+        $result    = $extractor->extractFromContent(file_get_contents('./tests/data/pages/case1.html'));
 
         $this->assertCount(30, $result, 'It should return the correct count of texts');
 
