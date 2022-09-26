@@ -10,11 +10,11 @@ class TextReplacer implements TextReplacerInterface
 
     public function replace(string $content, array $translatedContents, $options = []): string
     {
-        $dom               = new \DOMDocument();
+        $dom               = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = false;
         $dom->loadHTML(
             $content,
-            LIBXML_BIGLINES | LIBXML_HTML_NODEFDTD | LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NOXMLDECL | LIBXML_PARSEHUGE
+            LIBXML_BIGLINES | LIBXML_HTML_NODEFDTD | LIBXML_NOERROR | LIBXML_NOWARNING | LIBXML_NOXMLDECL | LIBXML_PARSEHUGE | LIBXML_HTML_NOIMPLIED
         );
 
         $defaultOptions = ['excludeTags' => self::EXCLUDED_TAGS];
