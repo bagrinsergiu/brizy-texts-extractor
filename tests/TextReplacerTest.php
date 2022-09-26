@@ -12,7 +12,7 @@ class TextReplacerTest extends TestCase
     public function testReplaceFromContentCase1()
     {
         $extractor   = new TextExtractor();
-        $htmlContent = file_get_contents('./data/pages/case1.html');
+        $htmlContent = file_get_contents('./tests/data/pages/case1.html');
         $result      = $extractor->extractFromContent($htmlContent);
 
         // add fake translated content
@@ -71,7 +71,7 @@ class TextReplacerTest extends TestCase
     public function testReplaceFromContentCase2()
     {
         $extractor   = new TextExtractor();
-        $htmlContent = file_get_contents('./data/pages/case1.html');
+        $htmlContent = file_get_contents('./tests/data/pages/case1.html');
         $result      = $extractor->extractFromContent($htmlContent);
         $replacer    = new TextReplacer();
 
@@ -145,7 +145,7 @@ class TextReplacerTest extends TestCase
    public function testReplaceFromContentCase3()
     {
         $extractor   = new TextExtractor();
-        $htmlContent = file_get_contents('./data/pages/case3.html');
+        $htmlContent = file_get_contents('./tests/data/pages/case3.html');
         $result      = $extractor->extractFromContent($htmlContent);
         $replacer    = new TextReplacer();
 
