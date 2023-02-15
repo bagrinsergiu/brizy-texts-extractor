@@ -81,6 +81,23 @@ class TextReplacer implements TextReplacerInterface
             }
         }
 
+        $attribute = "data-brz-translateble-";
+        foreach ($xpath->query("//@*[starts-with(name(),'{$attribute}')]") as $nodeAttr) {
+            /**
+             * @var \DOMNode $node ;
+             */
+
+            $content      = $nodeAttr->value;
+            $md5NodeValue = md5($content);
+            if (isset($translatedTexts[$md5NodeValue]) && $translatedTexts[$md5NodeValue]->getTranslatedContent()) {
+                $nodeAttr->value = str_replace(
+                    $translatedTexts[$md5NodeValue]->getContent(),
+                    $translatedTexts[$md5NodeValue]->getTranslatedContent(),
+                    $content
+                );
+            }
+        }
+
         /**
          * @var \DOMElement $pictureNode ;
          */

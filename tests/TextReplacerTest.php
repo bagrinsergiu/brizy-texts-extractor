@@ -85,7 +85,7 @@ class TextReplacerTest extends TestCase
             'It should container "paragraph1"'
         );
         $this->assertStringContainsString(
-            '<div>div1 <div>div2</div>div3</div>',
+            '<div data-brz-translateble-label="The website translations1">div1 <div>div2</div>div3</div>',
             $content,
             'It should container "div1"'
         );
@@ -145,10 +145,28 @@ class TextReplacerTest extends TestCase
    public function testReplaceFromContentCase3()
     {
         $extractor   = new TextExtractor();
-        $htmlContent = file_get_contents('./tests/data/pages/case3.html');
+        $htmlContent = file_get_contents('/opt/project/tests/data/pages/case3.html');
         $result      = $extractor->extractFromContent($htmlContent);
         $replacer    = new TextReplacer();
 
+        $content = $replacer->replace($htmlContent, $result);
+
+        $this->assertStringContainsString('class="brz"',$content,'It should preserve body class');
+    }
+
+
+   public function testReplaceFromContentCase4()
+    {
+        $extractor   = new TextExtractor();
+        $htmlContent = file_get_contents('/opt/project/tests/data/pages/case4.html');
+        $result      = $extractor->extractFromContent($htmlContent);
+
+        // add fake translated content
+        foreach ($result as $i => $extractedContent) {
+            $extractedContent->setTranslatedContent($extractedContent->getContent().'-TRANSLATED');
+        }
+
+        $replacer    = new TextReplacer();
         $content = $replacer->replace($htmlContent, $result);
 
         $this->assertStringContainsString('class="brz"',$content,'It should preserve body class');

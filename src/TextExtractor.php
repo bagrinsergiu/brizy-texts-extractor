@@ -64,6 +64,7 @@ class TextExtractor implements TextExtractorInterface
         }
 
         $result = array_merge($result, $this->extractAttributeTexts($dom, 'placeholder'));
+        $result = array_merge($result, $this->extractAttributeStaringWith($dom, 'data-brz-translateble-'));
         $result = array_merge($result, $this->extractImages($dom));
 
         // remove duplicates
@@ -137,6 +138,24 @@ class TextExtractor implements TextExtractorInterface
         return $result;
 
     }
+
+    private function extractAttributeStaringWith($dom, $attribute)
+    {
+        $result = [];
+        $xpath  = new \DOMXPath($dom);
+        foreach ($xpath->query("//@*[starts-with(name(),'{$attribute}')]") as $nodeAttr) {
+
+            /**
+             * @var \DOMAttr $nodeAttr ;
+             */
+            if ($nodeAttr->value) {
+                $result[] = ExtractedContent::instance(trim($nodeAttr->value), ExtractedContent::TYPE_TEXT);
+            }
+        }
+
+        return $result;
+    }
+
 
     private function replaceContentPlaceholders($content)
     {
