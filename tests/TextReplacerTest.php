@@ -25,6 +25,10 @@ class TextReplacerTest extends TestCase
 
         foreach ($result as $i => $extractedContent) {
 
+            // ignore the images extracted from css urls
+            if( strpos($extractedContent->getContent(),"logo-header")!==false)
+                continue;
+
             if (in_array($extractedContent->getContent(), ['placeholder', 'text', 'placeholder text1', 'text2'])) {
                 continue;
             }
@@ -66,6 +70,7 @@ class TextReplacerTest extends TestCase
             $content,
             "It should not replace the placeholder attribute"
         );
+
     }
 
     public function testReplaceFromContentCase2()

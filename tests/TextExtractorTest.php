@@ -4,6 +4,7 @@ namespace BrizyTextsExtractorTests;
 
 use BrizyTextsExtractor\TextExtractor;
 use PHPUnit\Framework\TestCase;
+use function Sabre\Uri\parse;
 
 class TextExtractorTest extends TestCase
 {
@@ -15,9 +16,9 @@ class TextExtractorTest extends TestCase
     public function testExtractFromContentCase1()
     {
         $extractor = new TextExtractor();
-        $result    = $extractor->extractFromContent(file_get_contents('./tests/data/pages/case1.html'));
+        $result    = $extractor->extractFromContent(file_get_contents('./tests/data/pages/case1.html'),[TextExtractor::URL_INFO=>parse("/test")]);
 
-        $this->assertCount(33, $result, 'It should return the correct count of texts');
+        $this->assertCount(39, $result, 'It should return the correct count of texts');
 
         $this->assertTrue(in_array('The website translations1', $result), 'It should contain "The website translations1"');
         $this->assertTrue(in_array('The website translations2', $result), 'It should contain "The website translations2"');
@@ -64,6 +65,18 @@ class TextExtractorTest extends TestCase
         $this->assertFalse(in_array('NOT INCLUDE SCRIPT FROM HEAD', $result), 'It should contain "NOT INCLUDE SCRIPT FROM HEAD"');
         $this->assertFalse(in_array('NOT INCLUDE STYLE FROM HEAD', $result), 'It should contain "NOT INCLUDE STYLE FROM BODY"');
         $this->assertFalse(in_array('NOT INCLUDE SCRIPT FROM HEAD', $result), 'It should contain "NOT INCLUDE SCRIPT FROM BODY"');
+
+        $this->assertTrue(in_array("./logo-header1.svg", $result), 'It should contain "logo-header1.svg"');
+        $this->assertTrue(in_array("./logo-header2.svg", $result), 'It should contain "./logo-header2.svg"');
+        $this->assertTrue(in_array( "./logo-header3.svg", $result), 'It should contain "./logo-header3.svg"');
+        $this->assertTrue(in_array( "./logo-header4.svg", $result), 'It should contain "./logo-header4.svg"');
+        $this->assertTrue(in_array( "./logo-header5.svg", $result), 'It should contain "./logo-header5.svg"');
+        $this->assertTrue(in_array( "./logo-header6.svg", $result), 'It should contain "./logo-header6.svg"');
+        $this->assertFalse(in_array( "http://domain.com/logo-header7.svg", $result), 'It should contain  "http://domain.com/logo-header7.svg"');
+        $this->assertFalse(in_array( "http://domain.com/logo-header8.svg", $result), 'It should contain  "http://domain.com/logo-header8.svg"');
+        $this->assertFalse(in_array( "http://domain.com/logo-header9.svg", $result), 'It should contain  "http://domain.com/logo-header9.svg"');
+        $this->assertFalse(in_array( "http://domain.com/logo-header10.svg", $result), 'It should contain "http://domain.com/logo-header10.svg"');
+
     }
 
 }

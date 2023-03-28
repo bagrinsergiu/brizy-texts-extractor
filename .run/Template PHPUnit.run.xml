@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+    <CommandLine>
+      <PhpTestInterpreterSettings>
+        <option name="interpreterName" value="brizy-text-extractor:latest" />
+      </PhpTestInterpreterSettings>
+      <envs>
+        <env name="XDEBUG_CONFIG" value="mode=debug client_host=host.docker.internal client_port=9003 start_with_request=trigger" />
+      </envs>
+    </CommandLine>
+    <TestRunner bootstrap_file="/opt/project/tests/bootstrap.php" configuration_file="phpunit.xml.dist" />
+    <method v="2" />
+  </configuration>
+</component>
