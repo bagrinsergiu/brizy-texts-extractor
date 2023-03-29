@@ -11,7 +11,6 @@ use function Sabre\Uri\parse;
 
 class TextExtractor implements TextExtractorInterface
 {
-    public const URL_INFO = 'urlInfo';
     public const EXCLUDED_TAGS = 'excludeTags';
 
     public const EXCLUDED_TAGS_VAL = ['style', 'script'];
@@ -38,13 +37,11 @@ class TextExtractor implements TextExtractorInterface
     {
         $content = file_get_contents($url);
 
-        $urlParsed = parse($url);
-
         if (!is_string($content)) {
             return [];
         }
 
-        return $this->extractFromContent($content, [self::URL_INFO => $urlParsed]);
+        return $this->extractFromContent($content);
     }
 
     private function extractTexts($dom, $options = [])
@@ -171,25 +168,14 @@ class TextExtractor implements TextExtractorInterface
     {
         $result = [];
         $xpath = new \DOMXPath($dom);
-        foreach ($xpath->query('//link[@rel="stylesheet"][@type="text/css"]') as $node) {
-            $attr = $node->attributes->getNamedItem("href");
-            if ($attr && $attr->value) {
-                if (!$this->hasTheSameHost($attr->value, $options))
-                    continue;
-
-                $content = @file_get_contents($attr->value);
-                if ($content) {
-                    $matches = [];
-                    preg_match_all("/background(?:-image)?:\s+url\(\"?(?<url>.*?)\"?\)/im", $content, $matches);
-
-                    foreach (array_unique($matches['url']) as $url) {
-
-                        $url = trim($url);
-                        if (!$this->hasTheSameHost($url, $options))
-                            continue;
-
-                        $result[] = ExtractedContent::instance($url, ExtractedContent::TYPE_MEDIA);
-                    }
+        foreach ($xpath->query('//style') as $node) {
+            $content = $node->nodeValue;//  attributes->getNamedItem("href");
+            if ($content) {
+                $matches = [];
+                preg_match_all("/background(?:-image)?:\s+url\(\"?(?<url>.*?)\"?\)/im", $content, $matches);
+                foreach (array_unique($matches['url']) as $url) {
+                    $url = trim($url);
+                    $result[] = ExtractedContent::instance($url, ExtractedContent::TYPE_MEDIA);
                 }
             }
         }

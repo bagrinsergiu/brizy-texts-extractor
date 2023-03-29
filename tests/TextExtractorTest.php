@@ -16,9 +16,9 @@ class TextExtractorTest extends TestCase
     public function testExtractFromContentCase1()
     {
         $extractor = new TextExtractor();
-        $result    = $extractor->extractFromContent(file_get_contents('./tests/data/pages/case1.html'),[TextExtractor::URL_INFO=>parse("/test")]);
+        $result    = $extractor->extractFromContent(file_get_contents('./tests/data/pages/case1.html'));
 
-        $this->assertCount(39, $result, 'It should return the correct count of texts');
+        $this->assertCount(43, $result, 'It should return the correct count of texts');
 
         $this->assertTrue(in_array('The website translations1', $result), 'It should contain "The website translations1"');
         $this->assertTrue(in_array('The website translations2', $result), 'It should contain "The website translations2"');
@@ -72,10 +72,10 @@ class TextExtractorTest extends TestCase
         $this->assertTrue(in_array( "./logo-header4.svg", $result), 'It should contain "./logo-header4.svg"');
         $this->assertTrue(in_array( "./logo-header5.svg", $result), 'It should contain "./logo-header5.svg"');
         $this->assertTrue(in_array( "./logo-header6.svg", $result), 'It should contain "./logo-header6.svg"');
-        $this->assertFalse(in_array( "http://domain.com/logo-header7.svg", $result), 'It should contain  "http://domain.com/logo-header7.svg"');
-        $this->assertFalse(in_array( "http://domain.com/logo-header8.svg", $result), 'It should contain  "http://domain.com/logo-header8.svg"');
-        $this->assertFalse(in_array( "http://domain.com/logo-header9.svg", $result), 'It should contain  "http://domain.com/logo-header9.svg"');
-        $this->assertFalse(in_array( "http://domain.com/logo-header10.svg", $result), 'It should contain "http://domain.com/logo-header10.svg"');
+        $this->assertTrue(in_array( "http://domain.com/logo-header7.svg", $result), 'It should contain  "http://domain.com/logo-header7.svg"');
+        $this->assertTrue(in_array( "http://domain.com/logo-header8.svg", $result), 'It should contain  "http://domain.com/logo-header8.svg"');
+        $this->assertTrue(in_array( "http://domain.com/logo-header9.svg", $result), 'It should contain  "http://domain.com/logo-header9.svg"');
+        $this->assertTrue(in_array( "http://domain.com/logo-header10.svg", $result), 'It should contain "http://domain.com/logo-header10.svg"');
 
     }
 
