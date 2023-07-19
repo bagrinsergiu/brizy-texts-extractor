@@ -33,6 +33,19 @@ class TextExtractor implements TextExtractorInterface
         return $result;
     }
 
+
+    public function extractSimpleTextsFromContent($content, $options = []): array
+    {
+        $content = $this->replaceContentPlaceholders($content);
+
+        $dom = new \DOMDocument();
+        $dom->loadHTML($content, self::DOM_OPTIONS);
+
+        $result = $this->extractSimpleTexts($dom, $options);
+
+        return $result;
+    }
+
     public function extractFromUrl($url): array
     {
         $content = file_get_contents($url);
@@ -43,6 +56,64 @@ class TextExtractor implements TextExtractorInterface
 
         return $this->extractFromContent($content);
     }
+
+    private function extractSimpleTexts($dom, $options = [])
+    {
+        $result = [];
+
+        $defaultOptions = [self::EXCLUDED_TAGS => self::EXCLUDED_TAGS_VAL];
+
+        $defaultOptions = array_merge($defaultOptions, $options);
+
+        $result = [];
+        $xpath = new \DOMXPath($dom);
+
+        // extract all texts
+        foreach ($xpath->query('//head//text()') as $node) {
+            $parent = $node->parentNode;
+
+            if (in_array($parent->tagName, $defaultOptions[self::EXCLUDED_TAGS])) {
+                continue;
+            }
+
+            if ($content = trim($node->nodeValue)) {
+                $result[] = ExtractedContent::instance($content, ExtractedContent::TYPE_TEXT);
+            }
+        }
+
+
+        $result = array_merge($result, $this->extractAttributeTexts($dom, 'placeholder'));
+        $result = array_merge($result, $this->extractAttributeStaringWith($dom, 'data-brz-translateble-'));
+        $result = array_merge($result, $this->extractImages($dom));
+        $result = array_merge($result, $this->extractCssImages($dom, $options));
+        return array_unique($result);
+    }
+
+    private function extractTextsFromHtmlBody($dom, $options = [])
+    {
+        $defaultOptions = [self::EXCLUDED_TAGS => self::EXCLUDED_TAGS_VAL];
+
+        $defaultOptions = array_merge($defaultOptions, $options);
+
+        $result = [];
+        $xpath = new \DOMXPath($dom);
+
+        // extract all texts
+        foreach ($xpath->query('//text()') as $node) {
+            $parent = $node->parentNode;
+
+            if (in_array($parent->tagName, $defaultOptions[self::EXCLUDED_TAGS])) {
+                continue;
+            }
+
+            if ($content = trim($node->nodeValue)) {
+                $result[] = ExtractedContent::instance($content, ExtractedContent::TYPE_TEXT);
+            }
+        }
+
+        return array_unique($result);
+    }
+
 
     private function extractTexts($dom, $options = [])
     {
