@@ -46,6 +46,25 @@ class TextExtractor implements TextExtractorInterface
         return $result;
     }
 
+    public function extractBodyTextFromContent($content): array
+    {
+        $content = $this->replaceContentPlaceholders($content);
+
+        $dom = new \DOMDocument();
+        $dom->loadHTML($content, self::DOM_OPTIONS);
+        $xpath = new \DOMXPath($dom);
+
+        foreach ($xpath->evaluate("//head|//*[not(normalize-space())]") as $node) {
+            $node->remove();
+        }
+
+        $link = $dom->createElement('div');
+        foreach ($xpath->evaluate("//script|//style|//picture|//img") as $node) {
+            $node->parentNode->replaceChild($link, $node);
+        }
+        return [ExtractedContent::instance($dom->saveHTML($dom->getElementsByTagName('body')->item(0)), ExtractedContent::TYPE_TEXT)];
+    }
+
     public function extractFromUrl($url): array
     {
         $content = file_get_contents($url);
@@ -131,8 +150,8 @@ class TextExtractor implements TextExtractorInterface
             if (in_array($parent->tagName, $defaultOptions[self::EXCLUDED_TAGS])) {
                 continue;
             }
-
-            if ($content = trim($node->nodeValue)) {
+            $content = trim($node->nodeValue);
+            if (strlen($content)>0 && !preg_match('/^\s*$/', $content)) {
                 $result[] = ExtractedContent::instance($content, ExtractedContent::TYPE_TEXT);
             }
         }

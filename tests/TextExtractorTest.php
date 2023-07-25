@@ -163,4 +163,10 @@ class TextExtractorTest extends TestCase
 
     }
 
+    public function testWhiteSpacesRemove()
+    {
+        $extractor = new TextExtractor();
+        $result = $extractor->extractFromContent(file_get_contents('https://sourcemaking.com/design_patterns/state'));
+    }
+
 }

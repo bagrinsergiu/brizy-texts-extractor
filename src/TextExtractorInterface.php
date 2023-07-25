@@ -18,6 +18,8 @@ interface TextExtractorInterface
      */
     public function extractSimpleTextsFromContent($content): array;
 
+    public function extractBodyTextFromContent($content): array;
+
     /**
      * @param $url
      *
