@@ -54,7 +54,7 @@ class TextExtractor implements TextExtractorInterface
         $dom->loadHTML($content, self::DOM_OPTIONS);
         $xpath = new \DOMXPath($dom);
 
-        foreach ($xpath->evaluate("//head|//*[not(normalize-space())]") as $node) {
+        foreach ($xpath->evaluate("//head|//*[not(normalize-space())]|//comment()") as $node) {
             $node->remove();
         }
 
@@ -62,6 +62,18 @@ class TextExtractor implements TextExtractorInterface
         foreach ($xpath->evaluate("//script|//style|//picture|//img") as $node) {
             $node->parentNode->replaceChild($link, $node);
         }
+
+        foreach ($xpath->evaluate("//*") as $node) {
+            $node->removeAttribute('style');
+            $node->removeAttribute('class');
+            $node->removeAttribute('name');
+            $node->removeAttribute('data-generated-css');
+            $node->removeAttribute('id');
+            $node->removeAttribute('data-uid');
+            $node->removeAttribute('data-custom-id');
+            $node->removeAttribute('data-uniq-id');
+        }
+
         return [ExtractedContent::instance($dom->saveHTML($dom->getElementsByTagName('body')->item(0)), ExtractedContent::TYPE_TEXT)];
     }
 
