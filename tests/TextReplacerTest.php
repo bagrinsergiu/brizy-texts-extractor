@@ -2,6 +2,11 @@
 
 namespace BrizyTextsExtractorTests;
 
+use BrizyTextsExtractor\Extractor\BrzTranslatableAttrExtractor;
+use BrizyTextsExtractor\Extractor\CssImageUrlExtractor;
+use BrizyTextsExtractor\Extractor\ImageUrlExtractor;
+use BrizyTextsExtractor\Extractor\OldTextExtractor;
+use BrizyTextsExtractor\Extractor\PlaceholderAttrExtractor;
 use BrizyTextsExtractor\TextExtractor;
 use BrizyTextsExtractor\TextReplacer;
 use PHPUnit\Framework\TestCase;
@@ -11,7 +16,14 @@ class TextReplacerTest extends TestCase
 
     public function testReplaceFromContentCase1()
     {
-        $extractor   = new TextExtractor();
+        $domExtractors = [
+            new PlaceholderAttrExtractor(),
+            new BrzTranslatableAttrExtractor(),
+            new CssImageUrlExtractor(),
+            new ImageUrlExtractor(),
+            new OldTextExtractor(),
+        ];
+        $extractor = new TextExtractor($domExtractors);
         $htmlContent = file_get_contents('./tests/data/pages/case1.html');
         $result      = $extractor->extractFromContent($htmlContent);
 
@@ -75,7 +87,14 @@ class TextReplacerTest extends TestCase
 
     public function testReplaceFromContentCase2()
     {
-        $extractor   = new TextExtractor();
+        $domExtractors = [
+            new PlaceholderAttrExtractor(),
+            new BrzTranslatableAttrExtractor(),
+            new CssImageUrlExtractor(),
+            new ImageUrlExtractor(),
+            new OldTextExtractor(),
+        ];
+        $extractor = new TextExtractor($domExtractors);
         $htmlContent = file_get_contents('./tests/data/pages/case1.html');
         $result      = $extractor->extractFromContent($htmlContent);
         $replacer    = new TextReplacer();
@@ -149,7 +168,14 @@ class TextReplacerTest extends TestCase
 
    public function testReplaceFromContentCase3()
     {
-        $extractor   = new TextExtractor();
+        $domExtractors = [
+            new PlaceholderAttrExtractor(),
+            new BrzTranslatableAttrExtractor(),
+            new CssImageUrlExtractor(),
+            new ImageUrlExtractor(),
+            new OldTextExtractor(),
+        ];
+        $extractor = new TextExtractor($domExtractors);
         $htmlContent = file_get_contents('/opt/project/tests/data/pages/case3.html');
         $result      = $extractor->extractFromContent($htmlContent);
         $replacer    = new TextReplacer();
@@ -159,10 +185,16 @@ class TextReplacerTest extends TestCase
         $this->assertStringContainsString('class="brz"',$content,'It should preserve body class');
     }
 
-
    public function testReplaceFromContentCase4()
     {
-        $extractor   = new TextExtractor();
+        $domExtractors = [
+            new PlaceholderAttrExtractor(),
+            new BrzTranslatableAttrExtractor(),
+            new CssImageUrlExtractor(),
+            new ImageUrlExtractor(),
+            new OldTextExtractor(),
+        ];
+        $extractor = new TextExtractor($domExtractors);
         $htmlContent = file_get_contents('/opt/project/tests/data/pages/case4.html');
         $result      = $extractor->extractFromContent($htmlContent);
 
@@ -176,6 +208,4 @@ class TextReplacerTest extends TestCase
 
         $this->assertStringContainsString('class="brz"',$content,'It should preserve body class');
     }
-
-
 }

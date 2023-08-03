@@ -11,10 +11,55 @@ use function Sabre\Uri\parse;
 
 class TextExtractor implements TextExtractorInterface
 {
-    public const EXCLUDED_TAGS = 'excludeTags';
-
-    public const EXCLUDED_TAGS_VAL = ['style', 'script'];
     private const DOM_OPTIONS = LIBXML_BIGLINES | LIBXML_NOBLANKS | LIBXML_NONET | LIBXML_NOERROR | LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_PARSEHUGE;
+
+    /**
+     * @var array<DomExtractorInterface>
+     */
+    private $extractors = [];
+
+    public function __construct(array $extractors = [])
+    {
+        foreach ($extractors as $extractor) {
+            $this->extractors[get_class($extractor)] = $extractors;
+        }
+    }
+
+    /**
+     * @return DomExtractorInterface[]
+     */
+    public function getExtractors(): array
+    {
+        return $this->extractors;
+    }
+
+    /**
+     * @param DomExtractorInterface[] $extractors
+     */
+    public function setExtractors(array $extractors): self
+    {
+        $this->extractors = $extractors;
+
+        return $this;
+    }
+
+    /**
+     * @param DomExtractorInterface $extractor
+     */
+    public function addExtractor(DomExtractorInterface $extractor): self
+    {
+        $this->extractors[get_class($extractor)] = $extractor;
+        return $this;
+    }
+
+    /**
+     * @param DomExtractorInterface $extractor
+     */
+    public function removeExtractor(string $extractorClass): self
+    {
+        unset($this->extractors[$extractorClass]);
+        return $this;
+    }
 
     /**
      * @param $content
@@ -46,159 +91,13 @@ class TextExtractor implements TextExtractorInterface
 
     private function extractTexts($dom, $options = [])
     {
-        $defaultOptions = [self::EXCLUDED_TAGS => self::EXCLUDED_TAGS_VAL];
-
-        $defaultOptions = array_merge($defaultOptions, $options);
-
         $result = [];
-        $xpath = new \DOMXPath($dom);
-
-        // extract all texts
-        foreach ($xpath->query('//text()') as $node) {
-            $parent = $node->parentNode;
-
-            if (in_array($parent->tagName, $defaultOptions[self::EXCLUDED_TAGS])) {
-                continue;
-            }
-
-            if ($content = trim($node->nodeValue)) {
-                $result[] = ExtractedContent::instance($content, ExtractedContent::TYPE_TEXT);
-            }
+        foreach ($this->extractors as $extractor) {
+            $result = array_merge($result, $extractor->extract($dom));
         }
 
-        $result = array_merge($result, $this->extractAttributeTexts($dom, 'placeholder'));
-        $result = array_merge($result, $this->extractAttributeStaringWith($dom, 'data-brz-translateble-'));
-        $result = array_merge($result, $this->extractImages($dom));
-        $result = array_merge($result, $this->extractCssImages($dom, $options));
-
-        // remove duplicates
         return array_unique($result);
     }
-
-    private function extractImages($dom)
-    {
-        $result = [];
-
-        /**
-         * @var \DOMElement $pictureNode ;
-         */
-        // search for sources
-        foreach ($dom->getElementsByTagName('source') as $sourceTag) {
-            $srcSet = trim($sourceTag->getAttribute('srcset'));
-            foreach (explode(',', $srcSet) as $imageSize) {
-                $explode = explode(' ', trim($imageSize));
-                $src = $explode[0];
-
-                if ($src) {
-                    $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
-                }
-            }
-        }
-
-        // extract all img srcs
-        foreach ($dom->getElementsByTagName('img') as $node) {
-
-            $srcSet = trim($node->getAttribute('srcset'));
-
-            foreach (explode(',', $srcSet) as $imageSize) {
-                $explode = explode(' ', trim($imageSize));
-                $src = $explode[0];
-                if ($src) {
-                    $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
-                }
-            }
-
-            $src = trim($node->getAttribute('src'));
-            $alt = trim($node->getAttribute('alt'));
-
-            if ($src) {
-                $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
-            }
-
-            if ($alt) {
-                $result[] = ExtractedContent::instance($alt, ExtractedContent::TYPE_TEXT);
-            }
-        }
-
-        return $result;
-    }
-
-    private function extractAttributeTexts($dom, $attribute)
-    {
-        $result = [];
-        $xpath = new \DOMXPath($dom);
-        foreach ($xpath->query('//*[@' . $attribute . ']') as $node) {
-            /**
-             * @var \DOMNode $node ;
-             * @var \DOMNamedNodeMap $t ;
-             */
-
-            $attr = $node->attributes->getNamedItem($attribute);
-            if ($attr) {
-                $result[] = ExtractedContent::instance(trim($attr->value), ExtractedContent::TYPE_TEXT);
-            }
-        }
-
-        return $result;
-
-    }
-
-    private function hasTheSameHost($url, $options)
-    {
-        $urlData = parse($url);
-
-        // return true as this is a relative path without domain
-        if ($urlData['host'] == "")
-            return true;
-
-        // return true as the page url info was no provided
-        if (!isset($options[self::URL_INFO])) {
-            return true;
-        }
-
-        // return true as the host matches
-        if ($options[self::URL_INFO] == $urlData['host']) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private function extractCssImages($dom, $options = [])
-    {
-        $result = [];
-        $xpath = new \DOMXPath($dom);
-        foreach ($xpath->query('//style') as $node) {
-            $content = $node->nodeValue;//  attributes->getNamedItem("href");
-            if ($content) {
-                $matches = [];
-                preg_match_all("/background(?:-image)?:\s+url\(\"?(?<url>.*?)\"?\)/im", $content, $matches);
-                foreach (array_unique($matches['url']) as $url) {
-                    $url = trim($url);
-                    $result[] = ExtractedContent::instance($url, ExtractedContent::TYPE_MEDIA);
-                }
-            }
-        }
-        return $result;
-    }
-
-    private function extractAttributeStaringWith($dom, $attribute)
-    {
-        $result = [];
-        $xpath = new \DOMXPath($dom);
-        foreach ($xpath->query("//@*[starts-with(name(),'{$attribute}')]") as $nodeAttr) {
-
-            /**
-             * @var \DOMAttr $nodeAttr ;
-             */
-            if ($nodeAttr->value) {
-                $result[] = ExtractedContent::instance(trim($nodeAttr->value), ExtractedContent::TYPE_TEXT);
-            }
-        }
-
-        return $result;
-    }
-
 
     private function replaceContentPlaceholders($content)
     {
