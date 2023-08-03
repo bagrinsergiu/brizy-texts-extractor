@@ -1,4 +1,5 @@
 <?php
+
 namespace BrizyTextsExtractor;
 
 interface TextExtractorInterface
@@ -16,4 +17,23 @@ interface TextExtractorInterface
      * @return array<ExtractedContent>
      */
     public function extractFromUrl($url): array;
+
+
+    public function getExtractors(): array;
+
+    /**
+     * @param DomExtractorInterface[] $extractors
+     */
+    public function setExtractors(array $extractors): TextExtractorInterface;
+
+    /**
+     * @param DomExtractorInterface $extractor
+     */
+    public function addExtractor(DomExtractorInterface $extractor): TextExtractorInterface;
+
+    /**
+     * @param DomExtractorInterface $extractor
+     */
+    public function removeExtractor(string $extractorClass): TextExtractorInterface;
+
 }

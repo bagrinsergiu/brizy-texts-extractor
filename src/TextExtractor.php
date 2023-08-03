@@ -21,7 +21,7 @@ class TextExtractor implements TextExtractorInterface
     public function __construct(array $extractors = [])
     {
         foreach ($extractors as $extractor) {
-            $this->extractors[get_class($extractor)] = $extractors;
+            $this->extractors[get_class($extractor)] = $extractor;
         }
     }
 
@@ -36,7 +36,7 @@ class TextExtractor implements TextExtractorInterface
     /**
      * @param DomExtractorInterface[] $extractors
      */
-    public function setExtractors(array $extractors): self
+    public function setExtractors(array $extractors): TextExtractorInterface
     {
         $this->extractors = $extractors;
 
@@ -46,7 +46,7 @@ class TextExtractor implements TextExtractorInterface
     /**
      * @param DomExtractorInterface $extractor
      */
-    public function addExtractor(DomExtractorInterface $extractor): self
+    public function addExtractor(DomExtractorInterface $extractor): TextExtractorInterface
     {
         $this->extractors[get_class($extractor)] = $extractor;
         return $this;
@@ -55,7 +55,7 @@ class TextExtractor implements TextExtractorInterface
     /**
      * @param DomExtractorInterface $extractor
      */
-    public function removeExtractor(string $extractorClass): self
+    public function removeExtractor(string $extractorClass): TextExtractorInterface
     {
         unset($this->extractors[$extractorClass]);
         return $this;
