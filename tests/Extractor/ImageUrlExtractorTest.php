@@ -24,7 +24,7 @@ class ImageUrlExtractorTest extends TestCase
 
         $result = $extractor->extract($dom);
 
-        $this->assertCount(14, $result, 'It should extract the corect amount of texts from attribute: data-brz-translateble-');
+        $this->assertCount(25, $result, 'It should extract the corect amount of texts from attribute: data-brz-translateble-');
 
         $this->assertTrue(in_array('image1.jpg', $result), 'It should contain "image1.jpg"');
         $this->assertTrue(in_array('image2.jpg', $result), 'It should contain "image2.jpg"');
