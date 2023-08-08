@@ -2,6 +2,7 @@
 
 namespace BrizyTextsExtractorTests;
 
+use BrizyTextsExtractor\ExtractedContent;
 use BrizyTextsExtractor\TextExtractor;
 use BrizyTextsExtractor\TextReplacer;
 use PHPUnit\Framework\TestCase;
@@ -11,32 +12,38 @@ class TextReplacerTest extends TestCase
 
     public function testReplaceFromContentCase1()
     {
-        $extractor   = new TextExtractor();
+        $extractor = new TextExtractor();
         $htmlContent = file_get_contents('./tests/data/pages/case1.html');
-        $result      = $extractor->extractFromContent($htmlContent);
+        $result = $extractor->extractFromContent($htmlContent);
 
         // add fake translated content
         foreach ($result as $i => $extractedContent) {
-            $extractedContent->setTranslatedContent($extractedContent->getContent().'-TRANSLATED');
+            $extractedContent->setTranslatedContent($extractedContent->getContent() . '-TRANSLATED');
         }
 
         $replacer = new TextReplacer();
-        $content  = $replacer->replace($htmlContent, $result);
+        $content = $replacer->replace($htmlContent, $result);
 
         foreach ($result as $i => $extractedContent) {
 
             // ignore the images extracted from css urls
-            if( strpos($extractedContent->getContent(),"logo-header")!==false)
+            if (strpos($extractedContent->getContent(), "logo-header") !== false)
                 continue;
 
             if (in_array($extractedContent->getContent(), ['placeholder', 'text', 'placeholder text1', 'text2'])) {
                 continue;
             }
 
+            $needle = $extractedContent->getTranslatedContent();
+
+            if ($extractedContent->getType() == ExtractedContent::TYPE_MEDIA) {
+                $needle = str_replace("&","&amp;", $needle);
+            }
+
             $this->assertStringContainsString(
-                $extractedContent->getTranslatedContent(),
+                $needle,
                 $content,
-                "It should contain the text: {$extractedContent->getTranslatedContent()}"
+                "It should contain the text: {$needle}"
             );
         }
 
@@ -75,10 +82,10 @@ class TextReplacerTest extends TestCase
 
     public function testReplaceFromContentCase2()
     {
-        $extractor   = new TextExtractor();
+        $extractor = new TextExtractor();
         $htmlContent = file_get_contents('./tests/data/pages/case1.html');
-        $result      = $extractor->extractFromContent($htmlContent);
-        $replacer    = new TextReplacer();
+        $result = $extractor->extractFromContent($htmlContent);
+        $replacer = new TextReplacer();
 
         $content = $replacer->replace($htmlContent, $result);
 
@@ -92,7 +99,7 @@ class TextReplacerTest extends TestCase
         $this->assertStringContainsString(
             '<div data-brz-translateble-label="The website translations1">div1 <div>div2</div>div3</div>',
             $content,
-            'It should container "div1"'
+            'It should container "<div data-brz-translateble-label="The website translations1">div1 <div>div2</div>div3</div>"'
         );
         $this->assertStringContainsString('image1.jpg"', $content, 'It should container "image1.jpg"');
         $this->assertStringContainsString('image2.jpg"', $content, 'It should container "image2.jpg"');
@@ -147,34 +154,34 @@ class TextReplacerTest extends TestCase
         );
     }
 
-   public function testReplaceFromContentCase3()
+    public function testReplaceFromContentCase3()
     {
-        $extractor   = new TextExtractor();
+        $extractor = new TextExtractor();
         $htmlContent = file_get_contents('/opt/project/tests/data/pages/case3.html');
-        $result      = $extractor->extractFromContent($htmlContent);
-        $replacer    = new TextReplacer();
+        $result = $extractor->extractFromContent($htmlContent);
+        $replacer = new TextReplacer();
 
         $content = $replacer->replace($htmlContent, $result);
 
-        $this->assertStringContainsString('class="brz"',$content,'It should preserve body class');
+        $this->assertStringContainsString('class="brz"', $content, 'It should preserve body class');
     }
 
 
-   public function testReplaceFromContentCase4()
+    public function testReplaceFromContentCase4()
     {
-        $extractor   = new TextExtractor();
+        $extractor = new TextExtractor();
         $htmlContent = file_get_contents('/opt/project/tests/data/pages/case4.html');
-        $result      = $extractor->extractFromContent($htmlContent);
+        $result = $extractor->extractFromContent($htmlContent);
 
         // add fake translated content
         foreach ($result as $i => $extractedContent) {
-            $extractedContent->setTranslatedContent($extractedContent->getContent().'-TRANSLATED');
+            $extractedContent->setTranslatedContent($extractedContent->getContent() . '-TRANSLATED');
         }
 
-        $replacer    = new TextReplacer();
+        $replacer = new TextReplacer();
         $content = $replacer->replace($htmlContent, $result);
 
-        $this->assertStringContainsString('class="brz"',$content,'It should preserve body class');
+        $this->assertStringContainsString('class="brz"', $content, 'It should preserve body class');
     }
 
 

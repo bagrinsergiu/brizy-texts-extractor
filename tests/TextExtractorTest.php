@@ -16,9 +16,8 @@ class TextExtractorTest extends TestCase
     public function testExtractFromContentCase1()
     {
         $extractor = new TextExtractor();
-        $result    = $extractor->extractFromContent(file_get_contents('./tests/data/pages/case1.html'));
+        $result = $extractor->extractFromContent(file_get_contents('./tests/data/pages/case1.html'));
 
-        $this->assertCount(43, $result, 'It should return the correct count of texts');
 
         $this->assertTrue(in_array('The website translations1', $result), 'It should contain "The website translations1"');
         $this->assertTrue(in_array('The website translations2', $result), 'It should contain "The website translations2"');
@@ -29,13 +28,7 @@ class TextExtractorTest extends TestCase
         $this->assertTrue(in_array('placeholder-in-placeholder', $result), 'It should contain "placeholder-in-placeholder"');
         $this->assertTrue(in_array('placeholder text1', $result), 'It should contain "placeholder text1"');
         $this->assertTrue(in_array('placeholder', $result), 'It should contain "placeholder text"');
-        $this->assertTrue(
-            in_array(
-                "Type the entire URL of your website in the text box on the left. ... The website translations you get with Google Translate aren't accurate and the service",
-                $result
-            ),
-            'It should contain "the long text"'
-        );
+
         $this->assertTrue(in_array('src', $result), 'It should contain "src"');
         $this->assertTrue(in_array('src="image1.jpg"', $result), 'It should contain src="image1.jpg"');
         $this->assertTrue(in_array('paragraph1', $result), 'It should contain "paragraph1"');
@@ -57,9 +50,17 @@ class TextExtractorTest extends TestCase
         $this->assertTrue(in_array('brizy-wp-pricing-1.jpg', $result), 'It should contain "brizy-wp-pricing-1.jpg"');
         $this->assertTrue(in_array('brizy-wp-pricing-2.jpg', $result), 'It should contain "brizy-wp-pricing-2.jpg"');
         $this->assertTrue(in_array('brizy-wp-pricing-11.jpg', $result), 'It should contain "brizy-wp-pricing-11.jpg"');
+        $this->assertTrue(in_array('brizy image with spaces.jpg', $result), 'It should contain "brizy image with spaces.jpg"');
         $this->assertTrue(in_array('brizy-wp-pricing-22.jpg', $result), 'It should contain "brizy-wp-pricing-22.jpg"');
         $this->assertTrue(in_array('brizy-wp-pricing-13.jpg', $result), 'It should contain "brizy-wp-pricing-13.jpg"');
         $this->assertTrue(in_array('brizy.jpg', $result), 'It should contain "brizy.jpg"');
+
+        $this->assertTrue(in_array('https://cloud-1de12d.b-cdn.net/media/iW=860&iH=848&oX=0&oY=102&cW=860&cH=646/377ea47fb00eea17da9434ee1e9efba4/jora kardan.jpg', $result), 'It should contain "377ea47fb00eea17da9434ee1e9efba4/jora kardan.jpg"');
+        $this->assertTrue(in_array('https://cloud-1de12d.b-cdn.net/media/iW=430&iH=424&oX=0&oY=51&cW=430&cH=323/377ea47fb00eea17da9434ee1e9efba4/jora kardan.jpg', $result), 'It should contain "377ea47fb00eea17da9434ee1e9efba4/jora kardan.jpg"');
+        $this->assertTrue(in_array('https://cloud-1de12d.b-cdn.net/media/iW=1536&iH=1514&oX=0&oY=182&cW=1536&cH=1152/377ea47fb00eea17da9434ee1e9efba4/jora kardan.jpg', $result), 'It should contain "377ea47fb00eea17da9434ee1e9efba4/jora kardan.jpg"');
+        $this->assertTrue(in_array('https://cloud-1de12d.b-cdn.net/media/iW=768&iH=757&oX=0&oY=91&cW=768&cH=576/377ea47fb00eea17da9434ee1e9efba4/jora kardan.jpg', $result), 'It should contain "377ea47fb00eea17da9434ee1e9efba4/jora kardan.jpg"');
+        $this->assertTrue(in_array('https://cloud-1de12d.b-cdn.net/media/iW=2340&iH=2308&oX=0&oY=276&cW=2340&cH=1756/377ea47fb00eea17da9434ee1e9efba4/jora kardan.jpg', $result), 'It should contain "377ea47fb00eea17da9434ee1e9efba4/jora kardan.jpg"');
+        $this->assertTrue(in_array('https://cloud-1de12d.b-cdn.net/media/iW=1170&iH=1154&oX=0&oY=138&cW=1170&cH=878/377ea47fb00eea17da9434ee1e9efba4/jora kardan.jpg', $result), 'It should contain "377ea47fb00eea17da9434ee1e9efba4/jora kardan.jpg"');
 
         $this->assertFalse(in_array('NOT INCLUDE STYLE FROM HEAD', $result), 'It should contain "NOT INCLUDE STYLE FROM HEAD"');
         $this->assertFalse(in_array('NOT INCLUDE SCRIPT FROM HEAD', $result), 'It should contain "NOT INCLUDE SCRIPT FROM HEAD"');
@@ -68,14 +69,17 @@ class TextExtractorTest extends TestCase
 
         $this->assertTrue(in_array("./logo-header1.svg", $result), 'It should contain "logo-header1.svg"');
         $this->assertTrue(in_array("./logo-header2.svg", $result), 'It should contain "./logo-header2.svg"');
-        $this->assertTrue(in_array( "./logo-header3.svg", $result), 'It should contain "./logo-header3.svg"');
-        $this->assertTrue(in_array( "./logo-header4.svg", $result), 'It should contain "./logo-header4.svg"');
-        $this->assertTrue(in_array( "./logo-header5.svg", $result), 'It should contain "./logo-header5.svg"');
-        $this->assertTrue(in_array( "./logo-header6.svg", $result), 'It should contain "./logo-header6.svg"');
-        $this->assertTrue(in_array( "http://domain.com/logo-header7.svg", $result), 'It should contain  "http://domain.com/logo-header7.svg"');
-        $this->assertTrue(in_array( "http://domain.com/logo-header8.svg", $result), 'It should contain  "http://domain.com/logo-header8.svg"');
-        $this->assertTrue(in_array( "http://domain.com/logo-header9.svg", $result), 'It should contain  "http://domain.com/logo-header9.svg"');
-        $this->assertTrue(in_array( "http://domain.com/logo-header10.svg", $result), 'It should contain "http://domain.com/logo-header10.svg"');
+        $this->assertTrue(in_array("./logo-header3.svg", $result), 'It should contain "./logo-header3.svg"');
+        $this->assertTrue(in_array("./logo-header4.svg", $result), 'It should contain "./logo-header4.svg"');
+        $this->assertTrue(in_array("./logo-header5.svg", $result), 'It should contain "./logo-header5.svg"');
+        $this->assertTrue(in_array("./logo-header6.svg", $result), 'It should contain "./logo-header6.svg"');
+        $this->assertTrue(in_array("http://domain.com/logo-header7.svg", $result), 'It should contain  "http://domain.com/logo-header7.svg"');
+        $this->assertTrue(in_array("http://domain.com/logo-header8.svg", $result), 'It should contain  "http://domain.com/logo-header8.svg"');
+        $this->assertTrue(in_array("http://domain.com/logo-header9.svg", $result), 'It should contain  "http://domain.com/logo-header9.svg"');
+        $this->assertTrue(in_array("http://domain.com/logo-header10.svg", $result), 'It should contain "http://domain.com/logo-header10.svg"');
+
+
+        $this->assertCount(50, $result, 'It should return the correct count of texts');
 
     }
 

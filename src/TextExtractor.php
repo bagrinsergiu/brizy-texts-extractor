@@ -87,7 +87,14 @@ class TextExtractor implements TextExtractorInterface
             $srcSet = trim($sourceTag->getAttribute('srcset'));
             foreach (explode(',', $srcSet) as $imageSize) {
                 $explode = explode(' ', trim($imageSize));
-                $src = $explode[0];
+                $src = null;
+                if (count($explode) > 2) {
+                    unset($explode[count($explode) - 1]);
+                    $src = implode(' ', $explode);
+                } else {
+                    $src = $explode[0];
+                }
+
 
                 if ($src) {
                     $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
@@ -102,7 +109,13 @@ class TextExtractor implements TextExtractorInterface
 
             foreach (explode(',', $srcSet) as $imageSize) {
                 $explode = explode(' ', trim($imageSize));
-                $src = $explode[0];
+                $src = null;
+                if (count($explode) > 2) {
+                    unset($explode[count($explode) - 1]);
+                    $src = implode(' ', $explode);
+                } else {
+                    $src = $explode[0];
+                }
                 if ($src) {
                     $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
                 }
