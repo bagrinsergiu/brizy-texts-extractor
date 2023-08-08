@@ -33,10 +33,16 @@ class TextReplacerTest extends TestCase
                 continue;
             }
 
+            $needle = $extractedContent->getTranslatedContent();
+
+            if ($extractedContent->getType() == ExtractedContent::TYPE_MEDIA) {
+                $needle = str_replace("&","&amp;", $needle);
+            }
+
             $this->assertStringContainsString(
-                $extractedContent->getTranslatedContent(),
+                $needle,
                 $content,
-                "It should contain the text: {$extractedContent->getTranslatedContent()}"
+                "It should contain the text: {$needle}"
             );
         }
 
@@ -82,23 +88,23 @@ class TextReplacerTest extends TestCase
 
         $content = $replacer->replace($htmlContent, $result);
 
-        $this->assertStringContainsString('<p>src</p>', $content, 'It should container "src"');
-        $this->assertStringContainsString('<p>src="image1.jpg"</p>', $content, 'It should container src="image1.jpg"');
+        $this->assertStringContainsString('<p>src</p>', $content, 'It should contain "src"');
+        $this->assertStringContainsString('<p>src="image1.jpg"</p>', $content, 'It should contain src="image1.jpg"');
         $this->assertStringContainsString(
             '<p>paragraph1 <span>span</span> paragraph2 <i>italic</i> paragraph3 <b>bold</b></p>',
             $content,
-            'It should container "paragraph1"'
+            'It should contain "paragraph1"'
         );
         $this->assertStringContainsString(
             '<div data-brz-translatable-label="The website translations1">div1 <div>div2</div>div3</div>',
             $content,
-            'It should container "div1"'
+            'It should contain "<div data-brz-translateble-label="The website translations1">div1 <div>div2</div>div3</div>"'
         );
-        $this->assertStringContainsString('image1.jpg"', $content, 'It should container "image1.jpg"');
-        $this->assertStringContainsString('image2.jpg"', $content, 'It should container "image2.jpg"');
-        $this->assertStringContainsString('image3.jpg"', $content, 'It should container "image3.jpg"');
-        $this->assertStringContainsString('alt_for_image.jpg"', $content, 'It should container "alt_for_image.jpg"');
-        $this->assertStringContainsString('next-alt"', $content, 'It should container "next-alt"');
+        $this->assertStringContainsString('image1.jpg"', $content, 'It should contain "image1.jpg"');
+        $this->assertStringContainsString('image2.jpg"', $content, 'It should contain "image2.jpg"');
+        $this->assertStringContainsString('image3.jpg"', $content, 'It should contain "image3.jpg"');
+        $this->assertStringContainsString('alt_for_image.jpg"', $content, 'It should contain "alt_for_image.jpg"');
+        $this->assertStringContainsString('next-alt"', $content, 'It should contain "next-alt"');
         $this->assertStringContainsString(
             'brizy-wp-pricing-1.jpg ',
             $content,
