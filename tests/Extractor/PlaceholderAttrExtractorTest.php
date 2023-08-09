@@ -15,7 +15,7 @@ class PlaceholderAttrExtractorTest extends TestCase
 {
     public function testExtract()
     {
-        $content = file_get_contents('./tests/data/pages/case1.html');
+        $content = file_get_contents('./tests/data/pages/case1.html.txt');
 
         $dom = new \DOMDocument();
         $dom->loadHTML($content, LIBXML_BIGLINES | LIBXML_NOBLANKS | LIBXML_NONET | LIBXML_NOERROR | LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD | LIBXML_PARSEHUGE);

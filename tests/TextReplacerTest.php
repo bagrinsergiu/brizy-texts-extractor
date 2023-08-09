@@ -25,7 +25,7 @@ class TextReplacerTest extends TestCase
             new OldTextExtractor(),
         ];
         $extractor = new TextExtractor($domExtractors);
-        $htmlContent = file_get_contents('./tests/data/pages/case1.html');
+        $htmlContent = file_get_contents('./tests/data/pages/case1.html.txt');
         $result = $extractor->extractFromContent($htmlContent);
 
         // add fake translated content
@@ -102,7 +102,7 @@ class TextReplacerTest extends TestCase
             new OldTextExtractor(),
         ];
         $extractor = new TextExtractor($domExtractors);
-        $htmlContent = file_get_contents('./tests/data/pages/case1.html');
+        $htmlContent = file_get_contents('./tests/data/pages/case1.html.txt');
         $result = $extractor->extractFromContent($htmlContent);
         $replacer = new TextReplacer();
 
@@ -183,7 +183,7 @@ class TextReplacerTest extends TestCase
             new OldTextExtractor(),
         ];
         $extractor = new TextExtractor($domExtractors);
-        $htmlContent = file_get_contents('/opt/project/tests/data/pages/case3.html');
+        $htmlContent = file_get_contents('/opt/project/tests/data/pages/case3.html.txt');
         $result = $extractor->extractFromContent($htmlContent);
         $replacer = new TextReplacer();
 
@@ -202,7 +202,7 @@ class TextReplacerTest extends TestCase
             new OldTextExtractor(),
         ];
         $extractor = new TextExtractor($domExtractors);
-        $htmlContent = file_get_contents('/opt/project/tests/data/pages/case4.html');
+        $htmlContent = file_get_contents('/opt/project/tests/data/pages/case4.html.txt');
         $result = $extractor->extractFromContent($htmlContent);
 
         // add fake translated content

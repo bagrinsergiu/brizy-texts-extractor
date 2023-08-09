@@ -24,7 +24,7 @@ class TextExtractorTest extends TestCase
             new OldTextExtractor(),
         ];
         $extractor = new TextExtractor($domExtractors);
-        $result = $extractor->extractFromContent(file_get_contents('./tests/data/pages/case1.html'));
+        $result = $extractor->extractFromContent(file_get_contents('./tests/data/pages/case1.html.txt'));
 
 
         $this->assertTrue(in_array('The website translations1', $result), 'It should contain "The website translations1"');
