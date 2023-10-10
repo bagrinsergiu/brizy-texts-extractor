@@ -23,10 +23,11 @@ class TextExtractorTest extends TestCase
         $replacer = new TextReplacer();
         $content = $replacer->replace($file_get_contents, $result);
 
-        file_put_contents('/opt/project/tests/data/pages/case6-t.html', $content);
+        //$path = '/opt/project/tests/data/pages/case6-t.html';
+        //file_put_contents($path, $content);
+        //unset($path);
 
-        $file_get_contents = file_get_contents('/opt/project/tests/data/pages/case6-t.html');
-        $result = $extractor->extractFromContent($file_get_contents);
+        $result = $extractor->extractFromContent($content);
         foreach ($result as $i => $extractedContent) {
             $this->assertStringContainsString("-TRANSLATED", $extractedContent->getContent(), 'Found one');
         }
@@ -161,12 +162,6 @@ class TextExtractorTest extends TestCase
         $this->assertFalse(in_array('NOT INCLUDE STYLE FROM HEAD', $result), 'It should contain "NOT INCLUDE STYLE FROM BODY"');
         $this->assertFalse(in_array('NOT INCLUDE SCRIPT FROM HEAD', $result), 'It should contain "NOT INCLUDE SCRIPT FROM BODY"');
 
-    }
-
-    public function testWhiteSpacesRemove()
-    {
-        $extractor = new TextExtractor();
-        $result = $extractor->extractFromContent(file_get_contents('https://sourcemaking.com/design_patterns/state'));
     }
 
 }

@@ -171,6 +171,7 @@ class TextExtractor implements TextExtractorInterface
         }
 
         $result = array_merge($result, $this->extractAttributeTexts($dom, 'placeholder'));
+        $result = array_merge($result, $this->extractMetaContentAttributeTexts($dom, 'placeholder'));
         $result = array_merge($result, $this->extractAttributeStaringWith($dom, 'data-brz-translateble-'));
         $result = array_merge($result, $this->extractImages($dom));
         $result = array_merge($result, $this->extractCssImages($dom, $options));
@@ -184,6 +185,7 @@ class TextExtractor implements TextExtractorInterface
         $trim = trim($text);
         $trim = preg_replace('/^\s*/', "", $trim);
         $trim = preg_replace('/\s*$/', "", $trim);
+        $t = $trim==" ";
         return $trim;
     }
 
@@ -191,7 +193,6 @@ class TextExtractor implements TextExtractorInterface
     private function extractImages($dom)
     {
         $result = [];
-
         /**
          * @var \DOMElement $pictureNode ;
          */
@@ -258,25 +259,50 @@ class TextExtractor implements TextExtractorInterface
 
     }
 
-    private function hasTheSameHost($url, $options)
+    private function extractMetaContentAttributeTexts($dom)
     {
-        $urlData = parse($url);
+        $includeNameMetaNames = ['keywords','description'];
+        $includePropertyMetaNames = ['og:url','og:title','og:description','og:image','og:video','og:audio'];
 
-        // return true as this is a relative path without domain
-        if ($urlData['host'] == "")
-            return true;
+        $result = [];
+        $xpath = new \DOMXPath($dom);
 
-        // return true as the page url info was no provided
-        if (!isset($options[self::URL_INFO])) {
-            return true;
+        $getMetaTextType = function ($name) {
+            switch ($name) {
+                case 'twitter:image':
+                case 'og:image':
+                    return ExtractedContent::TYPE_MEDIA;
+                default:
+                    return ExtractedContent::TYPE_TEXT;
+            }
+        };
+
+        foreach ($xpath->query('//meta') as $node) {
+            /**
+             * @var \DOMNode $node ;
+             * @var \DOMNamedNodeMap $t ;
+             */
+            $nameAttr = $node->attributes->getNamedItem('name');
+            $name = $nameAttr ? $this->trim($nameAttr->value) : '';
+
+            if ($name) {
+                if (!in_array($name, $includeNameMetaNames)) continue;
+            } else {
+                $propertyAttr = $node->attributes->getNamedItem('property');
+                $name = $propertyAttr ? $this->trim($propertyAttr->value) : '';
+                if (!in_array($name, $includePropertyMetaNames)) continue;
+            }
+
+            $contentAttr = $node->attributes->getNamedItem('content');
+            $contentAttrValue = $contentAttr ? $this->trim($contentAttr->value) : '';
+
+            if (($val=strip_tags($contentAttrValue)) && $name) {
+                $result[] = ExtractedContent::instance($val, $getMetaTextType($name));
+            }
         }
 
-        // return true as the host matches
-        if ($options[self::URL_INFO] == $urlData['host']) {
-            return true;
-        }
+        return $result;
 
-        return false;
     }
 
     private function extractCssImages($dom, $options = [])

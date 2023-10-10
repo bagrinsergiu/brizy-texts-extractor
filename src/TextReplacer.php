@@ -10,7 +10,7 @@ class TextReplacer implements TextReplacerInterface
 
     public function replace(string $content, array $translatedContents, $options = []): string
     {
-        $dom               = new \DOMDocument('1.0', 'UTF-8');
+        $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = false;
         $dom->loadHTML(
             $content,
@@ -24,7 +24,7 @@ class TextReplacer implements TextReplacerInterface
          * @var array<ExtractedContent> $translatedTexts ;
          * @var array<ExtractedContent> $translatedMedias ;
          */
-        $translatedTexts  = [];
+        $translatedTexts = [];
         $translatedMedias = [];
         foreach ($translatedContents as $translatedContent) {
             $md5Hash = md5($translatedContent->getContent());
@@ -69,7 +69,7 @@ class TextReplacer implements TextReplacerInterface
 
             $attr = $node->attributes->getNamedItem('placeholder');
             if ($attr) {
-                $content      = $attr->value;
+                $content = $attr->value;
                 $md5NodeValue = md5($content);
                 if (isset($translatedTexts[$md5NodeValue]) && $translatedTexts[$md5NodeValue]->getTranslatedContent()) {
                     $node->attributes->getNamedItem('placeholder')->value = str_replace(
@@ -87,7 +87,7 @@ class TextReplacer implements TextReplacerInterface
              * @var \DOMNode $node ;
              */
 
-            $content      = $nodeAttr->value;
+            $content = $nodeAttr->value;
             $md5NodeValue = md5($content);
             if (isset($translatedTexts[$md5NodeValue]) && $translatedTexts[$md5NodeValue]->getTranslatedContent()) {
                 $nodeAttr->value = str_replace(
@@ -119,11 +119,11 @@ class TextReplacer implements TextReplacerInterface
             }
         }
 
-        // extract all img srcs
+        // search img srcs
         foreach ($dom->getElementsByTagName('img') as $node) {
             $srcSet = trim($node->getAttribute('srcset'));
-            $src    = trim($node->getAttribute('src'));
-            $alt    = trim($node->getAttribute('alt'));
+            $src = trim($node->getAttribute('src'));
+            $alt = trim($node->getAttribute('alt'));
 
             $md5Src = md5($src);
             $md5Alt = md5($alt);
@@ -163,6 +163,42 @@ class TextReplacer implements TextReplacerInterface
                 );
             }
         }
+
+        // search meta tag values
+        $includeNameMetaNames = ['keywords', 'description'];
+        $includePropertyMetaNames = ['og:url', 'og:title', 'og:description', 'og:image', 'og:video', 'og:audio'];
+        foreach ($xpath->query('//meta') as $node) {
+            /**
+             * @var \DOMNode $node ;
+             * @var \DOMNamedNodeMap $t ;
+             */
+            $nameAttr = $node->attributes->getNamedItem('name');
+            $name = $nameAttr ? trim($nameAttr->value) : '';
+
+            if ($name) {
+                if (!in_array($name, $includeNameMetaNames)) continue;
+            } else {
+                $propertyAttr = $node->attributes->getNamedItem('property');
+                $name = $propertyAttr ? trim($propertyAttr->value) : '';
+                if (!in_array($name, $includePropertyMetaNames)) continue;
+            }
+
+            $contentAttr = $node->attributes->getNamedItem('content');
+            $contentAttrValue = $contentAttr ? $contentAttr->value : '';
+            $md5NodeValue = md5($contentAttrValue);
+
+            $searchVal = isset($translatedTexts[$md5NodeValue]) ? $translatedTexts[$md5NodeValue]->getContent() : (isset($translatedMedias[$md5NodeValue]) ? $translatedMedias[$md5NodeValue]->getContent() : '');
+            $replaceVal = isset($translatedTexts[$md5NodeValue]) ? $translatedTexts[$md5NodeValue]->getTranslatedContent() : (isset($translatedMedias[$md5NodeValue]) ? $translatedMedias[$md5NodeValue]->getTranslatedContent() : '');
+
+            if(empty($searchVal)) continue;
+
+            $contentAttr->value = str_replace(
+                $searchVal,
+                $replaceVal,
+                $contentAttrValue
+            );
+        }
+
 
         $content = $dom->saveHTML();
 
