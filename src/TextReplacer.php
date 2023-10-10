@@ -164,6 +164,41 @@ class TextReplacer implements TextReplacerInterface
             }
         }
 
+        // search meta tag values
+        $includeNameMetaNames = ['keywords', 'description','twitter:title'];
+        $includePropertyMetaNames = ['og:url', 'og:title', 'og:description', 'og:image', 'og:video', 'og:audio','twitter:title'];
+        foreach ($xpath->query('//meta') as $node) {
+            /**
+             * @var \DOMNode $node ;
+             * @var \DOMNamedNodeMap $t ;
+             */
+            $nameAttr = $node->attributes->getNamedItem('name');
+            $name = $nameAttr ? trim($nameAttr->value) : '';
+
+            if ($name) {
+                if (!in_array($name, $includeNameMetaNames)) continue;
+            } else {
+                $propertyAttr = $node->attributes->getNamedItem('property');
+                $name = $propertyAttr ? trim($propertyAttr->value) : '';
+                if (!in_array($name, $includePropertyMetaNames)) continue;
+            }
+
+            $contentAttr = $node->attributes->getNamedItem('content');
+            $contentAttrValue = $contentAttr ? $contentAttr->value : '';
+            $md5NodeValue = md5($contentAttrValue);
+
+            $searchVal = isset($translatedTexts[$md5NodeValue]) ? $translatedTexts[$md5NodeValue]->getContent() : (isset($translatedMedias[$md5NodeValue]) ? $translatedMedias[$md5NodeValue]->getContent() : '');
+            $replaceVal = isset($translatedTexts[$md5NodeValue]) ? $translatedTexts[$md5NodeValue]->getTranslatedContent() : (isset($translatedMedias[$md5NodeValue]) ? $translatedMedias[$md5NodeValue]->getTranslatedContent() : '');
+
+            if(empty($searchVal)) continue;
+
+            $contentAttr->value = str_replace(
+                $searchVal,
+                $replaceVal,
+                $contentAttrValue
+            );
+        }
+
         $content = $dom->saveHTML();
 
         return $content;

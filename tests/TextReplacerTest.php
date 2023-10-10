@@ -8,6 +8,7 @@ use BrizyTextsExtractor\Extractor\CssImageUrlExtractor;
 use BrizyTextsExtractor\Extractor\ImageUrlExtractor;
 use BrizyTextsExtractor\Extractor\OldTextExtractor;
 use BrizyTextsExtractor\Extractor\PlaceholderAttrExtractor;
+use BrizyTextsExtractor\Extractor\TranslatableMetaContentAttrExtractor;
 use BrizyTextsExtractor\TextExtractor;
 use BrizyTextsExtractor\TextReplacer;
 use PHPUnit\Framework\TestCase;
@@ -20,6 +21,7 @@ class TextReplacerTest extends TestCase
         $domExtractors = [
             new PlaceholderAttrExtractor(),
             new BrzTranslatableAttrExtractor(),
+            new TranslatableMetaContentAttrExtractor(),
             new CssImageUrlExtractor(),
             new ImageUrlExtractor(),
             new OldTextExtractor(),
@@ -97,6 +99,7 @@ class TextReplacerTest extends TestCase
         $domExtractors = [
             new PlaceholderAttrExtractor(),
             new BrzTranslatableAttrExtractor(),
+            new TranslatableMetaContentAttrExtractor(),
             new CssImageUrlExtractor(),
             new ImageUrlExtractor(),
             new OldTextExtractor(),
@@ -178,6 +181,7 @@ class TextReplacerTest extends TestCase
         $domExtractors = [
             new PlaceholderAttrExtractor(),
             new BrzTranslatableAttrExtractor(),
+            new TranslatableMetaContentAttrExtractor(),
             new CssImageUrlExtractor(),
             new ImageUrlExtractor(),
             new OldTextExtractor(),
@@ -196,6 +200,7 @@ class TextReplacerTest extends TestCase
     {
         $domExtractors = [
             new PlaceholderAttrExtractor(),
+            new TranslatableMetaContentAttrExtractor(),
             new BrzTranslatableAttrExtractor(),
             new CssImageUrlExtractor(),
             new ImageUrlExtractor(),

@@ -7,6 +7,7 @@ use BrizyTextsExtractor\Extractor\CssImageUrlExtractor;
 use BrizyTextsExtractor\Extractor\ImageUrlExtractor;
 use BrizyTextsExtractor\Extractor\OldTextExtractor;
 use BrizyTextsExtractor\Extractor\PlaceholderAttrExtractor;
+use BrizyTextsExtractor\Extractor\TranslatableMetaContentAttrExtractor;
 use BrizyTextsExtractor\TextExtractor;
 use PHPUnit\Framework\TestCase;
 use function Sabre\Uri\parse;
@@ -19,6 +20,7 @@ class TextExtractorTest extends TestCase
         $domExtractors = [
             new PlaceholderAttrExtractor(),
             new BrzTranslatableAttrExtractor(),
+            new TranslatableMetaContentAttrExtractor(),
             new CssImageUrlExtractor(),
             new ImageUrlExtractor(),
             new OldTextExtractor(),
@@ -27,6 +29,9 @@ class TextExtractorTest extends TestCase
         $result = $extractor->extractFromContent(file_get_contents('./tests/data/pages/case1.html.txt'));
 
 
+        $this->assertTrue(in_array('og:title', $result), 'It should contain "og:title"');
+        $this->assertTrue(in_array('twitter:title', $result), 'It should contain "twitter:title"');
+        $this->assertTrue(in_array('og:description', $result), 'It should contain "og:description"');
         $this->assertTrue(in_array('The website translations1', $result), 'It should contain "The website translations1"');
         $this->assertTrue(in_array('The website translations2', $result), 'It should contain "The website translations2"');
         $this->assertTrue(in_array('The website translations3', $result), 'It should contain "The website translations3"');
@@ -87,7 +92,7 @@ class TextExtractorTest extends TestCase
         $this->assertTrue(in_array("http://domain.com/logo-header10.svg", $result), 'It should contain "http://domain.com/logo-header10.svg"');
 
 
-        $this->assertCount(50, $result, 'It should return the correct count of texts');
+        $this->assertCount(53, $result, 'It should return the correct count of texts');
 
     }
 
