@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "93998805d200411dc01c081eb953a820",
+    "content-hash": "023db39479f0e1c40e5b64f90f113d55",
     "packages": [
         {
             "name": "bagrinsergiu/content-placeholder",
-            "version": "v2.0.15",
+            "version": "v2.0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bagrinsergiu/brizy-content-placeholder.git",
-                "reference": "6454569bd8982a53e1fd56e64fe9ef2b2cc18c73"
+                "reference": "733b83a410df05d6731cf8278b3aec350e1a6640"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bagrinsergiu/brizy-content-placeholder/zipball/6454569bd8982a53e1fd56e64fe9ef2b2cc18c73",
-                "reference": "6454569bd8982a53e1fd56e64fe9ef2b2cc18c73",
+                "url": "https://api.github.com/repos/bagrinsergiu/brizy-content-placeholder/zipball/733b83a410df05d6731cf8278b3aec350e1a6640",
+                "reference": "733b83a410df05d6731cf8278b3aec350e1a6640",
                 "shasum": ""
             },
             "require": {
@@ -42,10 +42,10 @@
                 "placeholders"
             ],
             "support": {
-                "source": "https://github.com/bagrinsergiu/brizy-content-placeholder/tree/v2.0.15",
+                "source": "https://github.com/bagrinsergiu/brizy-content-placeholder/tree/v2.0.16",
                 "issues": "https://github.com/bagrinsergiu/brizy-content-placeholder/issues"
             },
-            "time": "2023-09-08T10:56:27+00:00"
+            "time": "2023-11-06T10:30:56+00:00"
         }
     ],
     "packages-dev": [

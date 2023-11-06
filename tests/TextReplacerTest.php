@@ -175,5 +175,34 @@ class TextReplacerTest extends TestCase
 
         $this->assertStringContainsString('class="brz"', $content, 'It should preserve body class');
     }
+
+
+    public function testMetaFromContent()
+    {
+        $extractor = new TextExtractor();
+        $contents = file_get_contents('/opt/project/tests/data/pages/meta.html');
+        $result = $extractor->extractFromContent($contents);
+
+        // add fake translated content
+        foreach ($result as $i => $extractedContent) {
+            $extractedContent->setTranslatedContent($extractedContent->getContent() . '-TRANSLATED');
+        }
+
+        $replacer = new TextReplacer();
+        $content = $replacer->replace($contents, $result);
+
+
+        $this->assertCount(5, $result, 'It should return the correct count of texts');
+
+        $this->assertFalse(in_array('IGNORE', $result), 'It should contain "IGNORE"');
+        $this->assertFalse(in_array('twitter:card', $result), 'It should contain "twitter:card"');
+        $this->assertFalse(in_array('og:site_name', $result), 'It should contain "og:site_name"');
+        $this->assertFalse(in_array('og:type', $result), 'It should contain "og:type"');
+
+        $this->assertTrue(in_array('og:title', $result), 'It should contain "og:title"');
+        $this->assertTrue(in_array('og:description', $result), 'It should contain "og:description"');
+        $this->assertTrue(in_array('og:url', $result), 'It should contain "og:url"');
+        $this->assertTrue(in_array('og:image', $result), 'It should contain "og:image"');
+    }
 }
 
