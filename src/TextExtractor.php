@@ -115,7 +115,7 @@ class TextExtractor implements TextExtractorInterface
 
 
         $result = array_merge($result, $this->extractAttributeTexts($dom, 'placeholder'));
-        $result = array_merge($result, $this->extractAttributeStaringWith($dom, 'data-brz-translateble-'));
+        $result = array_merge($result, $this->extractAttributeStaringWith($dom, 'data-brz-translatable-'));
         $result = array_merge($result, $this->extractImages($dom));
         $result = array_merge($result, $this->extractCssImages($dom, $options));
         return array_unique($result);
@@ -172,7 +172,7 @@ class TextExtractor implements TextExtractorInterface
 
         $result = array_merge($result, $this->extractAttributeTexts($dom, 'placeholder'));
         $result = array_merge($result, $this->extractMetaContentAttributeTexts($dom, 'placeholder'));
-        $result = array_merge($result, $this->extractAttributeStaringWith($dom, 'data-brz-translateble-'));
+        $result = array_merge($result, $this->extractAttributeStaringWith($dom, 'data-brz-translatable-'));
         $result = array_merge($result, $this->extractImages($dom));
         $result = array_merge($result, $this->extractCssImages($dom, $options));
 
