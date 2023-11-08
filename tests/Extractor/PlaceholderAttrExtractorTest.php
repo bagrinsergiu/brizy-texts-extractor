@@ -24,7 +24,7 @@ class PlaceholderAttrExtractorTest extends TestCase
 
         $result = $extractor->extract($dom);
 
-        $this->assertCount(2, $result, 'It should extract the corect amount of texts from attribute: data-brz-translateble-');
+        $this->assertCount(2, $result, 'It should extract the corect amount of texts from attribute: data-brz-translatable-');
 
         $this->assertTrue(in_array('placeholder-in-placeholder', $result), 'It should contain "placeholder-in-placeholder"');
         $this->assertTrue(in_array('placeholder', $result), 'It should contain "placeholder text"');

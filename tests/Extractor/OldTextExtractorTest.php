@@ -24,7 +24,7 @@ class OldTextExtractorTest extends TestCase
 
         $result = $extractor->extract($dom);
 
-        $this->assertCount(15, $result, 'It should extract the corect amount of texts from attribute: data-brz-translateble-');
+        $this->assertCount(15, $result, 'It should extract the corect amount of texts from attribute: data-brz-translatable-');
 
         $this->assertTrue(in_array('title', $result), 'It should contain "title"');
         $this->assertTrue(in_array("{{placeholder}}placeholder{{unknown_placeholder}} text{{end_placeholder}}

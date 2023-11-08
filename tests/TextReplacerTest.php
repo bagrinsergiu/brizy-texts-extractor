@@ -119,9 +119,9 @@ class TextReplacerTest extends TestCase
             'It should container "paragraph1"'
         );
         $this->assertStringContainsString(
-            '<div data-brz-translateble-label="The website translations1">div1 <div>div2</div>div3</div>',
+            '<div data-brz-translatable-label="The website translations1">div1 <div>div2</div>div3</div>',
             $content,
-            'It should container "<div data-brz-translateble-label="The website translations1">div1 <div>div2</div>div3</div>"'
+            'It should container "<div data-brz-translatable-label="The website translations1">div1 <div>div2</div>div3</div>"'
         );
         $this->assertStringContainsString('image1.jpg"', $content, 'It should container "image1.jpg"');
         $this->assertStringContainsString('image2.jpg"', $content, 'It should container "image2.jpg"');

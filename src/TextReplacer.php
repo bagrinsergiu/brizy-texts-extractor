@@ -81,7 +81,7 @@ class TextReplacer implements TextReplacerInterface
             }
         }
 
-        $attribute = "data-brz-translateble-";
+        $attribute = "data-brz-translatable-";
         foreach ($xpath->query("//@*[starts-with(name(),'{$attribute}')]") as $nodeAttr) {
             /**
              * @var \DOMNode $node ;

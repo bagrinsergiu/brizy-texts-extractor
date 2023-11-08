@@ -10,7 +10,7 @@ class BrzTranslatableAttrExtractor implements DomExtractorInterface
 {
     use StringUtilsAware;
 
-    const ATTR = 'data-brz-translateble-';
+    const ATTR = 'data-brz-translatable-';
 
     public function extract(\DOMDocument $document): array
     {

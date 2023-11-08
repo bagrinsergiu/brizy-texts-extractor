@@ -24,7 +24,7 @@ class CssImageUrlExtractorTest extends TestCase
 
         $result = $extractor->extract($dom);
 
-        $this->assertCount(10, $result,'It should extract the corect amount of texts from attribute: data-brz-translateble-');
+        $this->assertCount(10, $result,'It should extract the corect amount of texts from attribute: data-brz-translatable-');
 
         $this->assertTrue(in_array("./logo-header1.svg", $result), 'It should contain "logo-header1.svg"');
         $this->assertTrue(in_array("./logo-header2.svg", $result), 'It should contain "./logo-header2.svg"');

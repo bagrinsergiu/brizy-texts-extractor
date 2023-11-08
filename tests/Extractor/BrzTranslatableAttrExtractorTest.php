@@ -24,7 +24,7 @@ class BrzTranslatableAttrExtractorTest extends TestCase
 
         $result = $extractor->extract($dom);
 
-        $this->assertCount(3, $result,'It should extract the corect amount of texts from attribute: data-brz-translateble-');
+        $this->assertCount(3, $result,'It should extract the corect amount of texts from attribute: data-brz-translatable-');
         $this->assertTrue(in_array('The website translations1', $result), 'It should contain "The website translations1"');
         $this->assertTrue(in_array('The website translations2', $result), 'It should contain "The website translations2"');
         $this->assertTrue(in_array('The website translations3', $result), 'It should contain "The website translations3"');
