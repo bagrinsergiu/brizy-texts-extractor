@@ -20,19 +20,13 @@ class ImageUrlExtractor implements DomExtractorInterface
         // search for sources
         foreach ($document->getElementsByTagName('source') as $sourceTag) {
             $srcSet = trim($sourceTag->getAttribute('srcset'));
+             if (empty($srcSet)) {
+                continue;
+            }
             foreach (explode(',', $srcSet) as $imageSize) {
-                $explode = explode(' ', trim($imageSize));
-                $src = null;
-                if (count($explode) > 2) {
-                    unset($explode[count($explode) - 1]);
-                    $src = implode(' ', $explode);
-                } else {
-                    $src = $explode[0];
-                }
-
-
-                if ($src) {
-                    $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
+                $srcT = $this->extractImageFromSizeValue($this->trim($imageSize));
+                if (!empty($srcT)) {
+                    $result[] = ExtractedContent::instance($srcT, ExtractedContent::TYPE_MEDIA);
                 }
             }
         }
@@ -42,26 +36,19 @@ class ImageUrlExtractor implements DomExtractorInterface
 
             $srcSet = trim($node->getAttribute('srcset'));
 
-            foreach (explode(',', $srcSet) as $imageSize) {
-                $explode = explode(' ', trim($imageSize));
-                $src = null;
-                if (count($explode) > 2) {
-                    unset($explode[count($explode) - 1]);
-                    $src = implode(' ', $explode);
-                } else {
-                    $src = $explode[0];
-                }
-
-
-                if ($src) {
-                    $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
+             if (!empty($srcSet)) {
+                foreach (explode(',', $srcSet) as $imageSize) {
+                    $srcT = $this->extractImageFromSizeValue($this->trim($imageSize));
+                    if (!empty($srcT)) {
+                        $result[] = ExtractedContent::instance($srcT, ExtractedContent::TYPE_MEDIA);
+                    }
                 }
             }
 
             $src = $this->cleanString($node->getAttribute('src'));
             $alt = $this->cleanString($node->getAttribute('alt'));
 
-            if ($src) {
+           if ($src && strpos($src, 'data:image') === false) {
                 $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
             }
 
@@ -72,5 +59,35 @@ class ImageUrlExtractor implements DomExtractorInterface
 
         return $result;
     }
+
+    private function extractImageFromSizeValue($value)
+    {
+        // ignore the inline images.
+        if (strpos($value, 'data:image') !== false) {
+            return null;
+        }
+
+        $explode = explode(',', $value);
+        if (count($explode) == 0) {
+            return $value;
+        }
+
+        foreach ($explode as $imageSize) {
+            $imageSize = $this->trim($imageSize);
+            $spaceIndex = strrpos($imageSize, ' ');
+            if ($spaceIndex === false) {
+                return $imageSize;
+            }
+
+            $imageUrl = substr($imageSize, 0, $spaceIndex);
+            $imageUrl = $this->trim($imageUrl);
+            if (strlen($imageUrl) > 0) {
+                return $imageUrl;
+            }
+        }
+
+        return null;
+    }
+
 
 }

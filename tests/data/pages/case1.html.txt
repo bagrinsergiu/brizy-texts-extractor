@@ -131,4 +131,5 @@ text {{placeholder}}placeholder text1 <input placeholder="placeholder-in-placeho
          alt draggable="false" loading="lazy"></picture>
 <style>NOT INCLUDE STYLE FROM BODY</style>
 <script>NOT INCLUDE SCRIPT FROM BODY</script>
+<img class="brz-img brz-p-absolute" src="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm9">
 </html>

@@ -7,8 +7,9 @@ trait StringUtilsAware
     protected function cleanString($string)
     {
         $string1 = $this->trim($string);
-        if (strlen($string1) > 0)
+        if (strlen($string1) > 0) {
             return $string1;
+        }
 
         return null;
     }
@@ -17,7 +18,10 @@ trait StringUtilsAware
     {
         $trim = trim($text);
         $trim = preg_replace('/^\s*/', "", $trim);
+        $trim = preg_replace('/^\h*/u', "", $trim);
         $trim = preg_replace('/\s*$/', "", $trim);
-        return $trim;
+        $trim = preg_replace('/\h*$/u', "", $trim);
+
+        return trim($trim);
     }
 }

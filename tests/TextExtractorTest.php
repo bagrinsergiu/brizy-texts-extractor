@@ -75,10 +75,11 @@ class TextExtractorTest extends TestCase
         $this->assertTrue(in_array('https://cloud-1de12d.b-cdn.net/media/iW=2340&iH=2308&oX=0&oY=276&cW=2340&cH=1756/377ea47fb00eea17da9434ee1e9efba4/jora kardan.jpg', $result), 'It should contain "377ea47fb00eea17da9434ee1e9efba4/jora kardan.jpg"');
         $this->assertTrue(in_array('https://cloud-1de12d.b-cdn.net/media/iW=1170&iH=1154&oX=0&oY=138&cW=1170&cH=878/377ea47fb00eea17da9434ee1e9efba4/jora kardan.jpg', $result), 'It should contain "377ea47fb00eea17da9434ee1e9efba4/jora kardan.jpg"');
 
-        $this->assertFalse(in_array('NOT INCLUDE STYLE FROM HEAD', $result), 'It should contain "NOT INCLUDE STYLE FROM HEAD"');
-        $this->assertFalse(in_array('NOT INCLUDE SCRIPT FROM HEAD', $result), 'It should contain "NOT INCLUDE SCRIPT FROM HEAD"');
-        $this->assertFalse(in_array('NOT INCLUDE STYLE FROM HEAD', $result), 'It should contain "NOT INCLUDE STYLE FROM BODY"');
-        $this->assertFalse(in_array('NOT INCLUDE SCRIPT FROM HEAD', $result), 'It should contain "NOT INCLUDE SCRIPT FROM BODY"');
+        $this->assertFalse(in_array('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm9', $result), 'It should NOT contain "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm9"');
+        $this->assertFalse(in_array('NOT INCLUDE STYLE FROM HEAD', $result), 'It should NOT contain "NOT INCLUDE STYLE FROM HEAD"');
+        $this->assertFalse(in_array('NOT INCLUDE SCRIPT FROM HEAD', $result), 'It should NOT contain "NOT INCLUDE SCRIPT FROM HEAD"');
+        $this->assertFalse(in_array('NOT INCLUDE STYLE FROM HEAD', $result), 'It should NOT contain "NOT INCLUDE STYLE FROM BODY"');
+        $this->assertFalse(in_array('NOT INCLUDE SCRIPT FROM HEAD', $result), 'It should NOT contain "NOT INCLUDE SCRIPT FROM BODY"');
 
         $this->assertTrue(in_array("./logo-header1.svg", $result), 'It should contain "logo-header1.svg"');
         $this->assertTrue(in_array("./logo-header2.svg", $result), 'It should contain "./logo-header2.svg"');
