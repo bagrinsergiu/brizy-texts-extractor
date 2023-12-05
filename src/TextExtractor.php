@@ -30,7 +30,7 @@ class TextExtractor implements TextExtractorInterface
 
         $result = $this->extractTexts($dom, $options);
 
-        return $result;
+        return array_values($result);
     }
 
 
@@ -74,7 +74,12 @@ class TextExtractor implements TextExtractorInterface
             $node->removeAttribute('data-uniq-id');
         }
 
-        return [ExtractedContent::instance($dom->saveHTML($dom->getElementsByTagName('body')->item(0)), ExtractedContent::TYPE_TEXT)];
+        return [
+            ExtractedContent::instance(
+                $dom->saveHTML($dom->getElementsByTagName('body')->item(0)),
+                ExtractedContent::TYPE_TEXT
+            ),
+        ];
     }
 
     public function extractFromUrl($url): array
@@ -118,6 +123,7 @@ class TextExtractor implements TextExtractorInterface
         $result = array_merge($result, $this->extractAttributeStaringWith($dom, 'data-brz-translatable-'));
         $result = array_merge($result, $this->extractImages($dom));
         $result = array_merge($result, $this->extractCssImages($dom, $options));
+
         return array_unique($result);
     }
 
@@ -184,9 +190,11 @@ class TextExtractor implements TextExtractorInterface
     {
         $trim = trim($text);
         $trim = preg_replace('/^\s*/', "", $trim);
+        $trim = preg_replace('/^\h*/u', "", $trim);
         $trim = preg_replace('/\s*$/', "", $trim);
-        $t = $trim==" ";
-        return $trim;
+        $trim = preg_replace('/\h*$/u', "", $trim);
+
+        return trim($trim);
     }
 
 
@@ -199,35 +207,33 @@ class TextExtractor implements TextExtractorInterface
         // search for sources
         foreach ($dom->getElementsByTagName('source') as $sourceTag) {
             $srcSet = $this->trim($sourceTag->getAttribute('srcset'));
+            if (empty($srcSet)) {
+                continue;
+            }
             foreach (explode(',', $srcSet) as $imageSize) {
-                $explode = explode(' ', $this->trim($imageSize));
-                $src = $explode[0];
-
-                $src = $this->trim($src);
-                if (strlen($src) > 0) {
-                    $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
+                $srcT = $this->extractImageFromSizeValue($this->trim($imageSize));
+                if (!empty($srcT)) {
+                    $result[] = ExtractedContent::instance($srcT, ExtractedContent::TYPE_MEDIA);
                 }
             }
         }
 
         // extract all img srcs
         foreach ($dom->getElementsByTagName('img') as $node) {
-
             $srcSet = $this->trim($node->getAttribute('srcset'));
-
-            foreach (explode(',', $srcSet) as $imageSize) {
-                $explode = explode(' ', $this->trim($imageSize));
-                $src = $explode[0];
-                $src = $this->trim($src);
-                if (strlen($src) > 0) {
-                    $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
+            if (!empty($srcSet)) {
+                foreach (explode(',', $srcSet) as $imageSize) {
+                    $srcT = $this->extractImageFromSizeValue($this->trim($imageSize));
+                    if (!empty($srcT)) {
+                        $result[] = ExtractedContent::instance($srcT, ExtractedContent::TYPE_MEDIA);
+                    }
                 }
             }
 
             $src = $this->trim($node->getAttribute('src'));
             $alt = $this->trim($node->getAttribute('alt'));
 
-            if ($src) {
+            if ($src && strpos($src, 'data:image') === false) {
                 $result[] = ExtractedContent::instance($src, ExtractedContent::TYPE_MEDIA);
             }
 
@@ -239,11 +245,40 @@ class TextExtractor implements TextExtractorInterface
         return $result;
     }
 
+    private function extractImageFromSizeValue($value)
+    {
+        // ignore the inline images.
+        if (strpos($value, 'data:image') !== false) {
+            return null;
+        }
+
+        $explode = explode(',', $value);
+        if (count($explode) == 0) {
+            return $value;
+        }
+
+        foreach ($explode as $imageSize) {
+            $imageSize = $this->trim($imageSize);
+            $spaceIndex = strrpos($imageSize, ' ');
+            if ($spaceIndex === false) {
+                return $imageSize;
+            }
+
+            $imageUrl = substr($imageSize, 0, $spaceIndex);
+            $imageUrl = $this->trim($imageUrl);
+            if (strlen($imageUrl) > 0) {
+                return $imageUrl;
+            }
+        }
+
+        return null;
+    }
+
     private function extractAttributeTexts($dom, $attribute)
     {
         $result = [];
         $xpath = new \DOMXPath($dom);
-        foreach ($xpath->query('//*[@' . $attribute . ']') as $node) {
+        foreach ($xpath->query('//*[@'.$attribute.']') as $node) {
             /**
              * @var \DOMNode $node ;
              * @var \DOMNamedNodeMap $t ;
@@ -315,12 +350,14 @@ class TextExtractor implements TextExtractorInterface
                 $matches = [];
                 preg_match_all("/background(?:-image)?:\s+url\(\"?(?<url>.*?)\"?\)/im", $content, $matches);
                 foreach (array_unique($matches['url']) as $url) {
-                    if ($url = $this->trim($url)) {
+                    // ignore the inline images.
+                    if (($url = $this->trim($url)) && strpos($url, 'data:image') === false) {
                         $result[] = ExtractedContent::instance($url, ExtractedContent::TYPE_MEDIA);
                     }
                 }
             }
         }
+
         return $result;
     }
 

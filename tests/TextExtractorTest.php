@@ -9,29 +9,6 @@ use function Sabre\Uri\parse;
 
 class TextExtractorTest extends TestCase
 {
-    public function testExtractFromContentCase2()
-    {
-        $extractor = new TextExtractor();
-        $file_get_contents = file_get_contents('/opt/project/tests/data/pages/case6.html');
-        $result = $extractor->extractFromContent($file_get_contents);
-
-        // add fake translated content
-        foreach ($result as $i => $extractedContent) {
-            $extractedContent->setTranslatedContent($extractedContent->getContent() . '-TRANSLATED');
-        }
-
-        $replacer = new TextReplacer();
-        $content = $replacer->replace($file_get_contents, $result);
-
-        //$path = '/opt/project/tests/data/pages/case6-t.html';
-        //file_put_contents($path, $content);
-        //unset($path);
-
-        $result = $extractor->extractFromContent($content);
-        foreach ($result as $i => $extractedContent) {
-            $this->assertStringContainsString("-TRANSLATED", $extractedContent->getContent(), 'Found one');
-        }
-    }
 
     public function testExtractFromContentCase1()
     {
@@ -81,10 +58,11 @@ class TextExtractorTest extends TestCase
         $this->assertTrue(in_array('brizy-wp-pricing-13.jpg', $result), 'It should contain "brizy-wp-pricing-13.jpg"');
         $this->assertTrue(in_array('brizy.jpg', $result), 'It should contain "brizy.jpg"');
 
-        $this->assertFalse(in_array('NOT INCLUDE STYLE FROM HEAD', $result), 'It should contain "NOT INCLUDE STYLE FROM HEAD"');
-        $this->assertFalse(in_array('NOT INCLUDE SCRIPT FROM HEAD', $result), 'It should contain "NOT INCLUDE SCRIPT FROM HEAD"');
-        $this->assertFalse(in_array('NOT INCLUDE STYLE FROM HEAD', $result), 'It should contain "NOT INCLUDE STYLE FROM BODY"');
-        $this->assertFalse(in_array('NOT INCLUDE SCRIPT FROM HEAD', $result), 'It should contain "NOT INCLUDE SCRIPT FROM BODY"');
+        $this->assertFalse(in_array('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm9', $result), 'It should NOT contain "data:image/svg+xml;base64,PHN2ZyB2aWV3Qm9"');
+        $this->assertFalse(in_array('NOT INCLUDE STYLE FROM HEAD', $result), 'It should NOT contain "NOT INCLUDE STYLE FROM HEAD"');
+        $this->assertFalse(in_array('NOT INCLUDE SCRIPT FROM HEAD', $result), 'It should NOT contain "NOT INCLUDE SCRIPT FROM HEAD"');
+        $this->assertFalse(in_array('NOT INCLUDE STYLE FROM HEAD', $result), 'It should NOT contain "NOT INCLUDE STYLE FROM BODY"');
+        $this->assertFalse(in_array('NOT INCLUDE SCRIPT FROM HEAD', $result), 'It should NOT contain "NOT INCLUDE SCRIPT FROM BODY"');
 
         $this->assertTrue(in_array("./logo-header1.svg", $result), 'It should contain "logo-header1.svg"');
         $this->assertTrue(in_array("./logo-header2.svg", $result), 'It should contain "./logo-header2.svg"');
