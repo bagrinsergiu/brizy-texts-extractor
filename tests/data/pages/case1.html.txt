@@ -7,6 +7,7 @@
     <title>title</title>
     <meta property="og:title" content="og:title" />
     <meta name="twitter:title" content="twitter:title" />
+    <meta property="og:site_name" content="og:site_name">
     <meta property="og:description" content="og:description" />
     <link rel="stylesheet" href="tests/data/pages/_static/styles.css" type="text/css"/>
     <link rel="stylesheet" href="domain.com/tests/data/pages/_static/styles-not-included.css" type="text/css"/>

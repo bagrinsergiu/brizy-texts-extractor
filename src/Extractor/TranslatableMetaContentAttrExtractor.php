@@ -15,7 +15,7 @@ class TranslatableMetaContentAttrExtractor implements DomExtractorInterface
     public function extract(\DOMDocument $document): array
     {
         $includeNameMetaNames = ['keywords', 'description','twitter:title'];
-        $includePropertyMetaNames = ['og:url', 'og:title', 'og:description', 'og:image', 'og:video', 'og:audio','twitter:title'];
+        $includePropertyMetaNames = ['og:site_name','og:url', 'og:title', 'og:description', 'og:image', 'og:video', 'og:audio','twitter:title'];
 
         $result = [];
         $xpath = new \DOMXPath($document);

@@ -166,7 +166,7 @@ class TextReplacer implements TextReplacerInterface
 
         // search meta tag values
         $includeNameMetaNames = ['keywords', 'description','twitter:title'];
-        $includePropertyMetaNames = ['og:url', 'og:title', 'og:description', 'og:image', 'og:video', 'og:audio','twitter:title'];
+        $includePropertyMetaNames = ['og:site_name','og:url', 'og:title', 'og:description', 'og:image', 'og:video', 'og:audio','twitter:title'];
         foreach ($xpath->query('//meta') as $node) {
             /**
              * @var \DOMNode $node ;

@@ -29,6 +29,7 @@ class TextExtractorTest extends TestCase
         $result = $extractor->extractFromContent(file_get_contents('./tests/data/pages/case1.html.txt'));
 
 
+        $this->assertTrue(in_array('og:site_name', $result), 'It should contain "og:site_name"');
         $this->assertTrue(in_array('og:title', $result), 'It should contain "og:title"');
         $this->assertTrue(in_array('twitter:title', $result), 'It should contain "twitter:title"');
         $this->assertTrue(in_array('og:description', $result), 'It should contain "og:description"');
@@ -93,7 +94,7 @@ class TextExtractorTest extends TestCase
         $this->assertTrue(in_array("http://domain.com/logo-header10.svg", $result), 'It should contain "http://domain.com/logo-header10.svg"');
 
 
-        $this->assertCount(53, $result, 'It should return the correct count of texts');
+        $this->assertCount(54, $result, 'It should return the correct count of texts');
 
     }
 

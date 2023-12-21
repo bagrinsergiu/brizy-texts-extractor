@@ -26,8 +26,9 @@ class TranslatableMetaContentAttrExtractorTest extends TestCase
 
         $result = $extractor->extract($dom);
 
-        $this->assertCount(3, $result, 'It should extract the correct amount of texts');
+        $this->assertCount(4, $result, 'It should extract the correct amount of texts');
 
+        $this->assertTrue(in_array('og:site_name', $result), 'It should contain "og:site_name"');
         $this->assertTrue(in_array('og:title', $result), 'It should contain "og:title"');
         $this->assertTrue(in_array('twitter:title', $result), 'It should contain "twitter:title"');
         $this->assertTrue(in_array('og:description', $result), 'It should contain "og:description"');
