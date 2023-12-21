@@ -297,7 +297,7 @@ class TextExtractor implements TextExtractorInterface
     private function extractMetaContentAttributeTexts($dom)
     {
         $includeNameMetaNames = ['keywords','description'];
-        $includePropertyMetaNames = ['og:url','og:title','og:description','og:image','og:video','og:audio'];
+        $includePropertyMetaNames = ['og:site_name','og:url','og:title','og:description','og:image','og:video','og:audio'];
 
         $result = [];
         $xpath = new \DOMXPath($dom);

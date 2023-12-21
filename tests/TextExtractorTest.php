@@ -147,13 +147,13 @@ class TextExtractorTest extends TestCase
         $extractor = new TextExtractor();
         $result = $extractor->extractFromContent(file_get_contents('/opt/project/tests/data/pages/meta.html'));
 
-        $this->assertCount(5, $result, 'It should return the correct count of texts');
+        $this->assertCount(6, $result, 'It should return the correct count of texts');
 
-        $this->assertFalse(in_array('IGNORE', $result), 'It should contain "IGNORE"');
-        $this->assertFalse(in_array('twitter:card', $result), 'It should contain "twitter:card"');
-        $this->assertFalse(in_array('og:site_name', $result), 'It should contain "og:site_name"');
-        $this->assertFalse(in_array('og:type', $result), 'It should contain "og:type"');
+        $this->assertFalse(in_array('IGNORE', $result), 'It should not contain "IGNORE"');
+        $this->assertFalse(in_array('twitter:card', $result), 'It should not contain "twitter:card"');
+        $this->assertFalse(in_array('og:type', $result), 'It should contain not "og:type"');
 
+        $this->assertTrue(in_array('og:site_name', $result), 'It should contain "og:title"');
         $this->assertTrue(in_array('og:title', $result), 'It should contain "og:title"');
         $this->assertTrue(in_array('og:description', $result), 'It should contain "og:description"');
         $this->assertTrue(in_array('og:url', $result), 'It should contain "og:url"');
