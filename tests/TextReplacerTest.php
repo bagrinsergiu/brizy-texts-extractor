@@ -26,8 +26,9 @@ class TextReplacerTest extends TestCase
         foreach ($result as $i => $extractedContent) {
 
             // ignore the images extracted from css urls
-            if (strpos($extractedContent->getContent(), "logo-header") !== false)
+            if (strpos($extractedContent->getContent(), "logo-header") !== false) {
                 continue;
+            }
 
             if (in_array($extractedContent->getContent(), ['placeholder', 'text', 'placeholder text1', 'text2'])) {
                 continue;
@@ -36,7 +37,7 @@ class TextReplacerTest extends TestCase
             $needle = $extractedContent->getTranslatedContent();
 
             if ($extractedContent->getType() == ExtractedContent::TYPE_MEDIA) {
-                $needle = str_replace("&","&amp;", $needle);
+                $needle = str_replace("&", "&amp;", $needle);
             }
 
             $this->assertStringContainsString(
@@ -173,7 +174,7 @@ class TextReplacerTest extends TestCase
 
         // add fake translated content
         foreach ($result as $i => $extractedContent) {
-            $extractedContent->setTranslatedContent($extractedContent->getContent() . '-TRANSLATED');
+            $extractedContent->setTranslatedContent($extractedContent->getContent().'-TRANSLATED');
         }
 
         $replacer = new TextReplacer();
@@ -181,7 +182,6 @@ class TextReplacerTest extends TestCase
 
         $this->assertStringContainsString('class="brz"', $content, 'It should preserve body class');
     }
-
 
     public function testMetaFromContent()
     {
@@ -191,7 +191,7 @@ class TextReplacerTest extends TestCase
 
         // add fake translated content
         foreach ($result as $i => $extractedContent) {
-            $extractedContent->setTranslatedContent($extractedContent->getContent() . '-TRANSLATED');
+            $extractedContent->setTranslatedContent($extractedContent->getContent().'-TRANSLATED');
         }
 
         $replacer = new TextReplacer();

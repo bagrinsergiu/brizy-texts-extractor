@@ -175,13 +175,14 @@ class TextReplacer implements TextReplacerInterface
             $nameAttr = $node->attributes->getNamedItem('name');
             $name = $nameAttr ? trim($nameAttr->value) : '';
 
-            if ($name) {
-                if (!in_array($name, $includeNameMetaNames)) continue;
-            } else {
-                $propertyAttr = $node->attributes->getNamedItem('property');
-                $name = $propertyAttr ? trim($propertyAttr->value) : '';
-                if (!in_array($name, $includePropertyMetaNames)) continue;
-            }
+// lets replace all texts that are translated in all meta tags.
+//            if ($name) {
+//                if (!in_array($name, $includeNameMetaNames)) continue;
+//            } else {
+//                $propertyAttr = $node->attributes->getNamedItem('property');
+//                $name = $propertyAttr ? trim($propertyAttr->value) : '';
+//                if (!in_array($name, $includePropertyMetaNames)) continue;
+//            }
 
             $contentAttr = $node->attributes->getNamedItem('content');
             $contentAttrValue = $contentAttr ? $contentAttr->value : '';
