@@ -141,15 +141,17 @@ class TextReplacer implements TextReplacerInterface
                 }
             }
 
-            if ($src && isset($translatedMedias[$md5Src]) && $translatedMedias[$md5Src]->getTranslatedContent()) {
-                $node->setAttribute(
-                    'src',
-                    str_replace(
-                        $translatedMedias[$md5Src]->getContent(),
-                        $translatedMedias[$md5Src]->getTranslatedContent(),
-                        $src
-                    )
-                );
+            if ($src) {
+                foreach ($translatedMedias as $media) {
+                    if (strpos($src, $media->getContent()) !== false && $media->getTranslatedContent()) {
+                        $src = str_replace(
+                            $media->getContent(),
+                            $media->getTranslatedContent(),
+                            $src
+                        );
+                        $node->setAttribute('src', $src);
+                    }
+                }
             }
 
             if ($alt && isset($translatedTexts[$md5Alt]) && $translatedTexts[$md5Alt]->getTranslatedContent()) {

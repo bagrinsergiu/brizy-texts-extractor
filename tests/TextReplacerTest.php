@@ -210,5 +210,26 @@ class TextReplacerTest extends TestCase
         $this->assertTrue(in_array('og:url', $result), 'It should contain "og:url"');
         $this->assertTrue(in_array('og:image', $result), 'It should contain "og:image"');
     }
+
+     public function testCustomerHtmlTest()
+    {
+        $extractor = new TextExtractor();
+        $html = htmlspecialchars_decode(file_get_contents('/opt/project/tests/data/pages/case9.html'));
+        $result = $extractor->extractFromContent($html);
+
+        foreach ($result as $text) {
+
+            // strip the brizy media url
+            if (ExtractedContent::TYPE_MEDIA == $text->getType()) {
+                $text->setContent(preg_replace("/^https:\/\/test-beta1\.b-cdn\.net\/media\/.*?\/(.*)$/", '$1', $text->getContent()));
+            }
+            $text->setTranslatedContent($text->getContent()."-translated");
+        }
+
+        $replacer = new TextReplacer();
+        $content = $replacer->replace($html, $result);
+
+        $this->assertStringContainsString('src="https://test-beta1.b-cdn.net/media/original/5650f2dd9af90867232d3310ec4e9100/icon.svg-translated"', $content, 'It should contain the translated image');
+    }
 }
 
