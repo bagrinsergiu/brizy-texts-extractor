@@ -220,4 +220,69 @@ class TextReplacerTest extends TestCase
 
         $this->assertStringContainsString('class="brz"', $content, 'It should preserve body class');
     }
+
+    public function testMetaFromContent()
+    {
+         $domExtractors = [
+            new PlaceholderAttrExtractor(),
+            new TranslatableMetaContentAttrExtractor(),
+            new BrzTranslatableAttrExtractor(),
+            new CssImageUrlExtractor(),
+            new ImageUrlExtractor(),
+            new OldTextExtractor(),
+        ];
+        $extractor = new TextExtractor($domExtractors);
+        $contents = file_get_contents('/opt/project/tests/data/pages/meta.html');
+        $result = $extractor->extractFromContent($contents);
+
+        // add fake translated content
+        foreach ($result as $i => $extractedContent) {
+            $extractedContent->setTranslatedContent($extractedContent->getContent().'-TRANSLATED');
+        }
+
+        $replacer = new TextReplacer();
+        $content = $replacer->replace($contents, $result);
+
+
+        $this->assertCount(6, $result, 'It should return the correct count of texts');
+
+        $this->assertFalse(in_array('IGNORE', $result), 'It should contain "IGNORE"');
+        $this->assertFalse(in_array('twitter:card', $result), 'It should contain "twitter:card"');
+        $this->assertFalse(in_array('og:type', $result), 'It should contain "og:type"');
+
+        $this->assertTrue(in_array('og:site_name', $result), 'It should contain "og:site_name"');
+        $this->assertTrue(in_array('og:title', $result), 'It should contain "og:title"');
+        $this->assertTrue(in_array('og:description', $result), 'It should contain "og:description"');
+        $this->assertTrue(in_array('og:url', $result), 'It should contain "og:url"');
+        $this->assertTrue(in_array('og:image', $result), 'It should contain "og:image"');
+    }
+
+     public function testCustomerHtmlTest()
+    {
+         $domExtractors = [
+            new PlaceholderAttrExtractor(),
+            new TranslatableMetaContentAttrExtractor(),
+            new BrzTranslatableAttrExtractor(),
+            new CssImageUrlExtractor(),
+            new ImageUrlExtractor(),
+            new OldTextExtractor(),
+        ];
+        $extractor = new TextExtractor($domExtractors);
+        $html = htmlspecialchars_decode(file_get_contents('/opt/project/tests/data/pages/case9.html'));
+        $result = $extractor->extractFromContent($html);
+
+        foreach ($result as $text) {
+
+            // strip the brizy media url
+            if (ExtractedContent::TYPE_MEDIA == $text->getType()) {
+                $text->setContent(preg_replace("/^https:\/\/test-beta1\.b-cdn\.net\/media\/.*?\/(.*)$/", '$1', $text->getContent()));
+            }
+            $text->setTranslatedContent($text->getContent()."-translated");
+        }
+
+        $replacer = new TextReplacer();
+        $content = $replacer->replace($html, $result);
+
+        $this->assertStringContainsString('src="https://test-beta1.b-cdn.net/media/original/5650f2dd9af90867232d3310ec4e9100/icon.svg-translated"', $content, 'It should contain the translated image');
+    }
 }
