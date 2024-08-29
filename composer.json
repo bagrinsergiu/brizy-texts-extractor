@@ -15,7 +15,7 @@
   "require": {
     "php": ">=7.2",
     "ext-dom": "*",
-    "bagrinsergiu/content-placeholder": "^2.0"
+    "bagrinsergiu/content-placeholder": "^2.0|^3.0"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.19",
