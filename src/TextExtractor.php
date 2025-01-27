@@ -188,13 +188,7 @@ class TextExtractor implements TextExtractorInterface
 
     private function trim($text)
     {
-        $trim = trim($text);
-        $trim = preg_replace('/^\s*/', "", $trim);
-        $trim = preg_replace('/^\h*/u', "", $trim);
-        $trim = preg_replace('/\s*$/', "", $trim);
-        $trim = preg_replace('/\h*$/u', "", $trim);
-
-        return trim($trim);
+        return trim($text," \t\n\r\0\x0B\xC2\xA0");
     }
 
 

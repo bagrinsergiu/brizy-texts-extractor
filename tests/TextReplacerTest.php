@@ -231,5 +231,18 @@ class TextReplacerTest extends TestCase
 
         $this->assertStringContainsString('src="https://test-beta1.b-cdn.net/media/original/5650f2dd9af90867232d3310ec4e9100/icon.svg-translated"', $content, 'It should contain the translated image');
     }
+
+
+     public function testCustomerHtmlTest2()
+    {
+        $extractor = new TextExtractor();
+        $html = htmlspecialchars_decode(file_get_contents('/opt/project/tests/data/pages/case10.html'));
+        $result = $extractor->extractFromContent($html);
+
+        $this->assertTrue(count($result) == 1, 'It should return the correct count of texts');
+        $this->assertEquals("CLICCA QUI", $result[0]->getContent(), 'It should return the correct content');
+
+
+    }
 }
 
