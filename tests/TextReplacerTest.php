@@ -174,7 +174,7 @@ class TextReplacerTest extends TestCase
 
         // add fake translated content
         foreach ($result as $i => $extractedContent) {
-            $extractedContent->setTranslatedContent($extractedContent->getContent().'-TRANSLATED');
+            $extractedContent->setTranslatedContent($extractedContent->getContent() . '-TRANSLATED');
         }
 
         $replacer = new TextReplacer();
@@ -191,7 +191,7 @@ class TextReplacerTest extends TestCase
 
         // add fake translated content
         foreach ($result as $i => $extractedContent) {
-            $extractedContent->setTranslatedContent($extractedContent->getContent().'-TRANSLATED');
+            $extractedContent->setTranslatedContent($extractedContent->getContent() . '-TRANSLATED');
         }
 
         $replacer = new TextReplacer();
@@ -211,7 +211,7 @@ class TextReplacerTest extends TestCase
         $this->assertTrue(in_array('og:image', $result), 'It should contain "og:image"');
     }
 
-     public function testCustomerHtmlTest()
+    public function testCustomerHtmlTest()
     {
         $extractor = new TextExtractor();
         $html = htmlspecialchars_decode(file_get_contents('/opt/project/tests/data/pages/case9.html'));
@@ -223,7 +223,7 @@ class TextReplacerTest extends TestCase
             if (ExtractedContent::TYPE_MEDIA == $text->getType()) {
                 $text->setContent(preg_replace("/^https:\/\/test-beta1\.b-cdn\.net\/media\/.*?\/(.*)$/", '$1', $text->getContent()));
             }
-            $text->setTranslatedContent($text->getContent()."-translated");
+            $text->setTranslatedContent($text->getContent() . "-translated");
         }
 
         $replacer = new TextReplacer();
@@ -233,16 +233,36 @@ class TextReplacerTest extends TestCase
     }
 
 
-     public function testCustomerHtmlTest2()
+    public function testCustomerHtmlTest2()
     {
         $extractor = new TextExtractor();
         $html = htmlspecialchars_decode(file_get_contents('/opt/project/tests/data/pages/case10.html'));
         $result = $extractor->extractFromContent($html);
 
+        $texts = array_map(function ($text) {
+            return $text->getContent();
+        }, $result);
+
+        $json = json_encode($texts);
+
         $this->assertTrue(count($result) == 1, 'It should return the correct count of texts');
         $this->assertEquals("CLICCA QUI", $result[0]->getContent(), 'It should return the correct content');
 
 
+    }
+    public function testCustomerHtmlTest3()
+    {
+        $extractor = new TextExtractor();
+        $html = htmlspecialchars_decode(file_get_contents('/opt/project/tests/data/pages/case11.html'));
+        $result = $extractor->extractFromContent($html);
+
+        $texts = array_map(function ($text) {
+            return $text->getContent();
+        }, $result);
+
+        $json = json_encode($texts);
+
+        $this->assertNotFalse($json, 'It should return the correct json');
     }
 }
 
