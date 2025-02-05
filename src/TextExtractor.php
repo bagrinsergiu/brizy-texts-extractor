@@ -188,12 +188,7 @@ class TextExtractor implements TextExtractorInterface
 
     private function trim($text)
     {
-        $trim = trim($text, " \t\n\r\0\x0B\xC2\xA0");
-        $trim = preg_replace('/^\s*/', "", $trim);
-        $trim = preg_replace('/^\h*/u', "", $trim);
-        $trim = preg_replace('/\s*$/', "", $trim);
-        $trim = preg_replace('/\h*$/u', "", $trim);
-        return trim($trim, " \t\n\r\0\x0B\xC2\xA0");
+        return preg_replace('/^\s+|\s+$/u', '', $text);
     }
 
 
@@ -277,7 +272,7 @@ class TextExtractor implements TextExtractorInterface
     {
         $result = [];
         $xpath = new \DOMXPath($dom);
-        foreach ($xpath->query('//*[@'.$attribute.']') as $node) {
+        foreach ($xpath->query('//*[@' . $attribute . ']') as $node) {
             /**
              * @var \DOMNode $node ;
              * @var \DOMNamedNodeMap $t ;
@@ -295,8 +290,8 @@ class TextExtractor implements TextExtractorInterface
 
     private function extractMetaContentAttributeTexts($dom)
     {
-        $includeNameMetaNames = ['keywords','description'];
-        $includePropertyMetaNames = ['og:site_name','og:url','og:title','og:description','og:image','og:video','og:audio','twitter:description','twitter:title'];
+        $includeNameMetaNames = ['keywords', 'description'];
+        $includePropertyMetaNames = ['og:site_name', 'og:url', 'og:title', 'og:description', 'og:image', 'og:video', 'og:audio', 'twitter:description', 'twitter:title'];
 
         $result = [];
         $xpath = new \DOMXPath($dom);
@@ -330,7 +325,7 @@ class TextExtractor implements TextExtractorInterface
             $contentAttr = $node->attributes->getNamedItem('content');
             $contentAttrValue = $contentAttr ? $this->trim($contentAttr->value) : '';
 
-            if (($val=strip_tags($contentAttrValue)) && $name) {
+            if (($val = strip_tags($contentAttrValue)) && $name) {
                 $result[] = ExtractedContent::instance($val, $getMetaTextType($name));
             }
         }
