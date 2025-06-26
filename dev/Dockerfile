@@ -12,13 +12,11 @@ RUN apt-get update && apt-get install -y \
       	libzip-dev \
       	libxml2-dev \
       	libcurl4-openssl-dev \
-      	zip unzip curl git vim \
+      	zip unzip curl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd zip xml opcache curl iconv intl json mysqli pdo pdo_mysql \
-    && docker-php-ext-enable pdo_mysql
+    && docker-php-ext-install -j$(nproc) gd zip xml opcache curl iconv intl json
 
-RUN pecl install mongodb && docker-php-ext-enable mongodb
-RUN pecl install xdebug-3.0.2 && docker-php-ext-enable xdebug
+RUN pecl install xdebug-3.1.4 && docker-php-ext-enable xdebug
 
 ENV APP_ENV: dev
 ENV PHP_IDE_CONFIG: serverName=_

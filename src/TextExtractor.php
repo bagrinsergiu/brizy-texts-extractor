@@ -24,6 +24,7 @@ class TextExtractor implements TextExtractorInterface
     public function extractFromContent($content, $options = []): array
     {
         $content = $this->replaceContentPlaceholders($content);
+        $content = preg_replace('#<script.*?</script>#is', '', $content);
 
         $dom = new \DOMDocument();
         $dom->loadHTML($content, self::DOM_OPTIONS);
@@ -49,6 +50,7 @@ class TextExtractor implements TextExtractorInterface
     public function extractBodyTextFromContent($content): array
     {
         $content = $this->replaceContentPlaceholders($content);
+        $content = preg_replace('#<script.*?</script>#is', '', $content);
 
         $dom = new \DOMDocument();
         $dom->loadHTML($content, self::DOM_OPTIONS);
