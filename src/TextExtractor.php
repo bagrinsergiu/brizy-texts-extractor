@@ -24,10 +24,15 @@ class TextExtractor implements TextExtractorInterface
     public function extractFromContent($content, $options = []): array
     {
         $content = $this->replaceContentPlaceholders($content);
-        $content = preg_replace('#<script.*?</script>#is', '', $content);
 
         $dom = new \DOMDocument();
         $dom->loadHTML($content, self::DOM_OPTIONS);
+
+        $xpath = new \DOMXPath($dom);
+        foreach ($xpath->query("//div[@class='brz-embed-content']") as $node) {
+            $value = $node->textContent;
+            $node->parentNode->removeChild($node);
+        }
 
         $result = $this->extractTexts($dom, $options);
 
@@ -42,6 +47,12 @@ class TextExtractor implements TextExtractorInterface
         $dom = new \DOMDocument();
         $dom->loadHTML($content, self::DOM_OPTIONS);
 
+        $xpath = new \DOMXPath($dom);
+        foreach ($xpath->query("//div[@class='brz-embed-content']") as $node) {
+            $value = $node->textContent;
+            $node->parentNode->removeChild($node);
+        }
+
         $result = $this->extractSimpleTexts($dom, $options);
 
         return $result;
@@ -50,12 +61,17 @@ class TextExtractor implements TextExtractorInterface
     public function extractBodyTextFromContent($content): array
     {
         $content = $this->replaceContentPlaceholders($content);
-        $content = preg_replace('#<script.*?</script>#is', '', $content);
 
         $dom = new \DOMDocument();
         $dom->loadHTML($content, self::DOM_OPTIONS);
-        $xpath = new \DOMXPath($dom);
 
+        $xpath = new \DOMXPath($dom);
+        foreach ($xpath->query("//div[@class='brz-embed-content']") as $node) {
+            $value = $node->textContent;
+            $node->parentNode->removeChild($node);
+        }
+
+        $xpath = new \DOMXPath($dom);
         foreach ($xpath->evaluate("//head|//*[not(normalize-space())]|//comment()") as $node) {
             $node->remove();
         }

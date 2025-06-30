@@ -278,4 +278,12 @@ class TextExtractorTest extends TestCase
         $this->assertTrue(in_array('og:url', $result), 'It should contain "og:url"');
         $this->assertTrue(in_array('og:image', $result), 'It should contain "og:image"');
     }
+
+    public function testExtractIgnoreScripts()
+    {
+        $extractor = new TextExtractor();
+        $result = $extractor->extractFromContent(file_get_contents('/opt/project/tests/data/pages/case12.html'));
+
+        $this->assertCount(1, $result, 'It should return the correct count of texts');
+    }
 }
