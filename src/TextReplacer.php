@@ -49,7 +49,7 @@ class TextReplacer implements TextReplacerInterface
                 continue;
             }
 
-            if ($string = trim($node->nodeValue)) {
+            if ($string = $this->trim($node->nodeValue)) {
                 $md5NodeValue = md5($string);
                 if (isset($translatedTexts[$md5NodeValue]) && $translatedTexts[$md5NodeValue]->getTranslatedContent()) {
                     $node->nodeValue = str_replace(
@@ -103,7 +103,7 @@ class TextReplacer implements TextReplacerInterface
          */
         // search for sources
         foreach ($dom->getElementsByTagName('source') as $sourceTag) {
-            $srcSet = trim($sourceTag->getAttribute('srcset'));
+            $srcSet = $this->trim($sourceTag->getAttribute('srcset'));
 
             if ($srcSet) {
                 foreach ($translatedMedias as $media) {
@@ -121,9 +121,9 @@ class TextReplacer implements TextReplacerInterface
 
         // search img srcs
         foreach ($dom->getElementsByTagName('img') as $node) {
-            $srcSet = trim($node->getAttribute('srcset'));
-            $src = trim($node->getAttribute('src'));
-            $alt = trim($node->getAttribute('alt'));
+            $srcSet = $this->trim($node->getAttribute('srcset'));
+            $src = $this->trim($node->getAttribute('src'));
+            $alt = $this->trim($node->getAttribute('alt'));
 
             $md5Src = md5($src);
             $md5Alt = md5($alt);
@@ -175,7 +175,7 @@ class TextReplacer implements TextReplacerInterface
              * @var \DOMNamedNodeMap $t ;
              */
             $nameAttr = $node->attributes->getNamedItem('name');
-            $name = $nameAttr ? trim($nameAttr->value) : '';
+            $name = $nameAttr ? $this->trim($nameAttr->value) : '';
 
 // lets replace all texts that are translated in all meta tags.
 //            if ($name) {
@@ -193,7 +193,7 @@ class TextReplacer implements TextReplacerInterface
             $searchVal = isset($translatedTexts[$md5NodeValue]) ? $translatedTexts[$md5NodeValue]->getContent() : (isset($translatedMedias[$md5NodeValue]) ? $translatedMedias[$md5NodeValue]->getContent() : '');
             $replaceVal = isset($translatedTexts[$md5NodeValue]) ? $translatedTexts[$md5NodeValue]->getTranslatedContent() : (isset($translatedMedias[$md5NodeValue]) ? $translatedMedias[$md5NodeValue]->getTranslatedContent() : '');
 
-            if(empty($searchVal)) continue;
+            if (empty($searchVal)) continue;
 
             $contentAttr->value = str_replace(
                 $searchVal,
@@ -207,4 +207,10 @@ class TextReplacer implements TextReplacerInterface
 
         return $content;
     }
+
+    private function trim($text)
+    {
+        return preg_replace('/^\s+|\s+$/u', '', $text);
+    }
+
 }
