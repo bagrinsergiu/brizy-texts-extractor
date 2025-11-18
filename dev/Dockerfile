@@ -5,19 +5,6 @@ ENV COMPOSER_AUTH ${COMPOSER_AUTH}
 FROM php:7.4-cli as stage_php7
 COPY --from=strage_composer /usr/bin/composer /usr/bin/composer
 
-RUN apt-get update && apt-get install -y \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libpng-dev \
-      	libzip-dev \
-      	libxml2-dev \
-      	libcurl4-openssl-dev \
-      	zip unzip curl git vim \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd zip xml opcache curl iconv intl json mysqli pdo pdo_mysql \
-    && docker-php-ext-enable pdo_mysql
-
-RUN pecl install mongodb && docker-php-ext-enable mongodb
 RUN pecl install xdebug-3.0.2 && docker-php-ext-enable xdebug
 
 ENV APP_ENV: dev
