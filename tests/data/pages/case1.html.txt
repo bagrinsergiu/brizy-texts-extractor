@@ -98,6 +98,9 @@
 </head>
 <body class="wy-body-for-nav">
 <p>src</p>
+<p data-translation-ignore="true">IGNORED TEXT</p>
+<p data-translation-ignore="false">IGNORED TEXT</p>
+<p data-translation-ignore>IGNORED TEXT</p>
 {{placeholder}}placeholder{{unknown_placeholder}} text{{end_placeholder}}
 text {{placeholder}}placeholder text1 <input placeholder="placeholder-in-placeholder"> {{end_placeholder}} text2
 <p>src="image1.jpg"</p>

@@ -54,6 +54,7 @@ text {{placeholder}}placeholder text1", $result), 'It should contain "text"');
         $this->assertFalse(in_array('NOT INCLUDE SCRIPT FROM HEAD', $result), 'It should contain "NOT INCLUDE SCRIPT FROM HEAD"');
         $this->assertFalse(in_array('NOT INCLUDE STYLE FROM HEAD', $result), 'It should contain "NOT INCLUDE STYLE FROM BODY"');
         $this->assertFalse(in_array('NOT INCLUDE SCRIPT FROM HEAD', $result), 'It should contain "NOT INCLUDE SCRIPT FROM BODY"');
+        $this->assertFalse(in_array('IGNORED TEXT', $result), 'It should contain "IGNORED TEXT"');
 
     }
 
