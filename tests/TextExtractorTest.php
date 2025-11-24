@@ -131,6 +131,10 @@ class TextExtractorTest extends TestCase
             in_array('NOT INCLUDE SCRIPT FROM HEAD', $result),
             'It should NOT contain "NOT INCLUDE SCRIPT FROM BODY"'
         );
+      $this->assertFalse(
+            in_array('IGNORED TEXT', $result),
+            'It should NOT contain "IGNORED TEXT"'
+        );
 
         $this->assertTrue(in_array("./logo-header1.svg", $result), 'It should contain "logo-header1.svg"');
         $this->assertTrue(in_array("./logo-header2.svg", $result), 'It should contain "./logo-header2.svg"');
@@ -166,6 +170,7 @@ class TextExtractorTest extends TestCase
 
         $this->assertCount(35, $result, 'It should return the correct count of texts');
 
+        $this->assertFalse(in_array('IGNORED TEXT', $result), 'It should contain "IGNORED TEXT"');
         $this->assertFalse(in_array('text', $result), 'It should contain "text"');
         $this->assertFalse(in_array('text2', $result), 'It should contain "text2"');
         $this->assertFalse(in_array('placeholder text1', $result), 'It should contain "placeholder text1"');

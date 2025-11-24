@@ -155,7 +155,7 @@ class TextExtractor implements TextExtractorInterface
         $xpath = new \DOMXPath($dom);
 
         // extract all texts
-        foreach ($xpath->query('//text()') as $node) {
+        foreach ($xpath->query('//text()[not(ancestor::*[@data-translation-ignore])]') as $node) {
             $parent = $node->parentNode;
 
             if (in_array($parent->tagName, $defaultOptions[self::EXCLUDED_TAGS])) {
@@ -182,7 +182,7 @@ class TextExtractor implements TextExtractorInterface
         $xpath = new \DOMXPath($dom);
 
         // extract all texts
-        foreach ($xpath->query('//text()') as $node) {
+        foreach ($xpath->query('//text()[not(ancestor::*[@data-translation-ignore])]') as $node) {
             $parent = $node->parentNode;
 
             if (in_array($parent->tagName, $defaultOptions[self::EXCLUDED_TAGS])) {

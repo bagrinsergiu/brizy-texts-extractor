@@ -38,7 +38,7 @@ class TextReplacer implements TextReplacerInterface
         $xpath = new \DOMXPath($dom);
 
         // extract all texts
-        foreach ($xpath->query('//text()') as $node) {
+        foreach ($xpath->query('//text()[not(ancestor::*[@data-translation-ignore])]') as $node) {
             /**
              * @var \DOMNode $node ;
              * @var \DOMNode $parent ;
