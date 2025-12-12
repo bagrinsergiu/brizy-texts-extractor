@@ -291,4 +291,12 @@ class TextExtractorTest extends TestCase
 
         $this->assertCount(1, $result, 'It should return the correct count of texts');
     }
+
+    public function testExtractClientCase()
+    {
+        $extractor = new TextExtractor();
+        $result = $extractor->extractFromContent(file_get_contents('/opt/project/tests/data/pages/case13.html'));
+
+        $this->assertCount(1, $result, 'It should return the correct count of texts');
+    }
 }
