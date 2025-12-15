@@ -49,7 +49,6 @@ class TextExtractor implements TextExtractorInterface
 
         $xpath = new \DOMXPath($dom);
         foreach ($xpath->query("//div[@class='brz-embed-content']") as $node) {
-            $value = $node->textContent;
             $node->parentNode->removeChild($node);
         }
 
@@ -393,6 +392,8 @@ class TextExtractor implements TextExtractorInterface
 
     private function replaceContentPlaceholders($content)
     {
+        if($content=='') return $content;
+
         $extractor = new Extractor(new Registry());
         list($contentPlaceholders, $returnedContent) = $extractor->extractIgnoringRegistry(
             $content,
